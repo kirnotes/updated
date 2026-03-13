@@ -1083,6 +1083,7 @@ function bindEvents() {
     console.error("JS error:", e.message, "at", e.filename, "line", e.lineno);
   });
 }
+
 function init() {
   initPanels();
   loadSidebarState();
@@ -1100,11 +1101,4 @@ function init() {
   }
 }
 
-  if (appState.session?.agentName) {
-    renderCloudDashboard();
-  }
-}
-
-
 init();
-

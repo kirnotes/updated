@@ -687,9 +687,6 @@ function renderSinglePanel(index, panelState) {
   const selectedWrapEl = panelEl.querySelector(".selected-wrap");
   const selectedKeywordEl = panelEl.querySelector(".selected-keyword");
   const lastCopyEl = panelEl.querySelector(".last-copy");
-  const aiWrapEl = panelEl.querySelector(".ai-wrap");
-  const aiKeywordEl = panelEl.querySelector(".ai-keyword");
-  const aiConfidenceEl = panelEl.querySelector(".ai-confidence");
 
   WRAPS.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach((w) => {
     const opt = document.createElement("option");
@@ -720,18 +717,6 @@ function renderSinglePanel(index, panelState) {
     }
   }
 
-  function syncSuggestion() {
-    panelState.aiSuggestion = suggestWrapKeyword(panelState.Issue);
-    if (!panelState.aiSuggestion) {
-      aiWrapEl.textContent = "—";
-      aiKeywordEl.textContent = "—";
-      aiConfidenceEl.textContent = "0%";
-      return;
-    }
-    aiWrapEl.textContent = panelState.aiSuggestion.wrap || "—";
-    aiKeywordEl.textContent = panelState.aiSuggestion.keyword || "—";
-    aiConfidenceEl.textContent = `${panelState.aiSuggestion.confidence}%`;
-  }
 
   function syncOutput() {
     panelState.output = buildOutput(panelState);
@@ -794,33 +779,6 @@ function renderSinglePanel(index, panelState) {
   panelEl.querySelector(".use-resolution-hint").addEventListener("click", () => {
     if (!resolutionHintEl.value.trim()) return;
     panelState.resolution = resolutionHintEl.value;
-    savePanelsState();
-    renderPanels();
-  });
-
-  panelEl.querySelector(".apply-ai-wrap").addEventListener("click", () => {
-    if (!panelState.aiSuggestion?.wrap) return;
-    panelState.wrapCode = panelState.aiSuggestion.wrap;
-    const wrapObj = WRAPS.find((w) => w.name === panelState.wrapCode);
-    if (!wrapObj || !wrapObj.keywords.includes(panelState.keyword)) {
-      panelState.keyword = "";
-    }
-    savePanelsState();
-    renderPanels();
-  });
-
-  panelEl.querySelector(".apply-ai-keyword").addEventListener("click", () => {
-    if (!panelState.aiSuggestion?.keyword) return;
-    if (panelState.aiSuggestion.wrap) panelState.wrapCode = panelState.aiSuggestion.wrap;
-    panelState.keyword = panelState.aiSuggestion.keyword;
-    savePanelsState();
-    renderPanels();
-  });
-
-  panelEl.querySelector(".apply-ai-both").addEventListener("click", () => {
-    if (!panelState.aiSuggestion) return;
-    if (panelState.aiSuggestion.wrap) panelState.wrapCode = panelState.aiSuggestion.wrap;
-    if (panelState.aiSuggestion.keyword) panelState.keyword = panelState.aiSuggestion.keyword;
     savePanelsState();
     renderPanels();
   });
@@ -1102,3 +1060,4 @@ function init() {
 }
 
 init();
+

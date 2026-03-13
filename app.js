@@ -1,6 +1,7 @@
 import { CONFIG } from "./config.js";
 import { initCutoffClock } from "./cutoff.js";
 import { WRAPS, WRAP_HINTS, KEYWORD_HINTS, NIA_LIBRARY } from "./data.js";
+import { WRAP_DETAILS } from "./wrapDetails.js";
 import {
   getUserId,
   saveSession,
@@ -153,8 +154,7 @@ function createEmptyPanelState(id) {
     credit: "",
     refund: "",
     output: "",
-    lastCopy: "",
-    aiSuggestion: null
+    lastCopy: ""
   };
 }
 
@@ -174,8 +174,7 @@ function sanitizePanelState(panel, fallbackId) {
     credit: String(panel?.credit || ""),
     refund: String(panel?.refund || ""),
     output: String(panel?.output || ""),
-    lastCopy: String(panel?.lastCopy || ""),
-    aiSuggestion: null
+    lastCopy: String(panel?.lastCopy || "")
   };
 }
 
@@ -382,122 +381,6 @@ function getHintPair(wrap, keyword) {
   };
 }
 
-function normalizeText(text) {
-  return String(text || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function keywordAliases() {
-  return {
-    "Refund": ["refund", "money back", "refunded"],
-    "Credit": ["credit", "credited", "account credit"],
-    "Missing": ["missing", "not in box", "item missing"],
-    "Spoiled": ["spoiled", "gone bad", "smelly", "bad ingredient"],
-    "Where Is My Box?": ["where is my box", "tracking", "delivery update"],
-    "Marked Delivered - Not received": ["marked delivered", "not received"],
-    "App": ["app", "mobile app", "app bug"],
-    "Website": ["website", "site", "browser"],
-    "Password Reset": ["password reset", "cannot log in", "can't log in", "login issue"],
-    "Failed Payment": ["failed payment", "payment failed", "card declined"],
-    "Cancellation - Price": ["too expensive", "price", "cost", "cannot afford"],
-    "Can't Afford / Out of Budget": ["too expensive", "price", "cost", "cannot afford", "out of budget"],
-    "Cancellation - Delivery issues": ["delivery issue", "late delivery", "courier problem"],
-    "Meal Swap": ["meal swap", "swap meal", "change meal"],
-    "Skip - On vacation": ["vacation", "away", "holiday"],
-    "Change Delivery Address (for a specific box)": ["change address", "delivery address"],
-    "Delivery Day": ["change delivery day", "delivery day"],
-    "Change Delivery window": ["delivery window", "delivery time"],
-    "Code Not Applied": ["voucher not working", "promo not working", "code not applied"],
-    "Unauthorised Charge": ["unauthorised charge", "unknown charge", "charged me"],
-    "Leaking / Spilled": ["leaking", "spilled", "spill"],
-    "Warm": ["warm", "not cold"],
-    "Mold": ["mold", "mould"],
-    "Rotten": ["rotten"],
-    "Punctured / Torn": ["punctured", "torn", "ripped"],
-    "Damage": ["damaged", "damage"],
-    "No Tracking Link Received": ["no tracking", "tracking link missing"],
-    "No Delivery": ["no delivery", "never arrived"],
-    "Misrouted": ["wrong address", "misrouted", "delivered somewhere else"],
-    "Missing Box": ["missing box", "box missing", "no box"],
-    "Delivery Status Check": ["delivery status", "status of delivery", "where is delivery"],
-    "Late [after delivery window]": ["late", "after 8pm", "delayed delivery"],
-    "Rolled 1 day": ["rolled 1 day", "delayed one day", "1 day late"],
-    "Rolled 2 day": ["rolled 2 day", "delayed two days", "2 day late"]
-  };
-}
-
-function suggestWrapKeyword(text) {
-  const normalized = normalizeText(text);
-  if (!normalized) return null;
-
-  const aliases = keywordAliases();
-  const wrapScores = new Map();
-  const keywordScores = new Map();
-
-  function addWrap(name, score) {
-    wrapScores.set(name, (wrapScores.get(name) || 0) + score);
-  }
-
-  function addKeyword(name, score) {
-    keywordScores.set(name, (keywordScores.get(name) || 0) + score);
-  }
-
-  for (const wrap of WRAPS) {
-    const wrapName = normalizeText(wrap.name);
-    let wrapScore = 0;
-
-    if (normalized.includes(wrapName)) wrapScore += 80;
-    for (const token of wrapName.split(" ")) {
-      if (token.length >= 4 && normalized.includes(token)) wrapScore += 6;
-    }
-    addWrap(wrap.name, wrapScore);
-
-    for (const keyword of wrap.keywords) {
-      const normKeyword = normalizeText(keyword);
-      let score = 0;
-
-      if (normalized.includes(normKeyword)) score += 100;
-      for (const token of normKeyword.split(" ")) {
-        if (token.length >= 4 && normalized.includes(token)) score += 10;
-      }
-
-      const aliasList = aliases[keyword] || [];
-      for (const alias of aliasList) {
-        if (normalized.includes(normalizeText(alias))) score += 60;
-      }
-
-      addKeyword(keyword, score);
-      if (score > 0) addWrap(wrap.name, score * 0.45);
-    }
-  }
-
-  const sortedWraps = [...wrapScores.entries()].sort((a, b) => b[1] - a[1]);
-  const sortedKeywords = [...keywordScores.entries()].sort((a, b) => b[1] - a[1]);
-
-  const wrap = sortedWraps[0]?.[0] || "";
-  let keyword = sortedKeywords[0]?.[0] || "";
-
-  if (wrap) {
-    const wrapObj = WRAPS.find((w) => w.name === wrap);
-    if (wrapObj && !wrapObj.keywords.includes(keyword)) {
-      const bestKeywordInWrap = wrapObj.keywords
-        .map((k) => [k, keywordScores.get(k) || 0])
-        .sort((a, b) => b[1] - a[1])[0];
-      keyword = bestKeywordInWrap?.[0] || "";
-    }
-  }
-
-  const confidence = Math.min(
-    99,
-    Math.max(12, Math.round(Math.max(sortedWraps[0]?.[1] || 0, sortedKeywords[0]?.[1] || 0) / 2))
-  );
-
-  return { wrap, keyword, confidence };
-}
-
 function buildMoneyText(panelState) {
   const creditVal = normalizeMoney(panelState.credit);
   const refundVal = normalizeMoney(panelState.refund);
@@ -590,21 +473,17 @@ function buildPanelTemplate(index, panelState, canRemove) {
       <label>Wrap Code</label>
       <select class="wrap-select"></select>
 
+      <div class="wrap-guide-box">
+        <div class="wrap-guide-title">WRAP CODE</div>
+        <div class="wrap-guide-selected">
+          <span class="wrap-guide-current">${escapeHtml(panelState.wrapCode || "—")}</span>
+        </div>
+        <div class="wrap-guide-text">${escapeHtml(WRAP_DETAILS[panelState.wrapCode] || "No wrap description available.")}</div>
+      </div>
+
       <label>Keyword (ONLY ONE)</label>
       <div class="chips keyword-container"></div>
       <div class="hint">Click one keyword. Choosing another replaces it.</div>
-
-      <div class="ai-box">
-        <div class="ai-title">AI Suggestion</div>
-        <div class="ai-line"><strong>Wrap:</strong> <span class="ai-wrap">—</span></div>
-        <div class="ai-line"><strong>Keyword:</strong> <span class="ai-keyword">—</span></div>
-        <div class="ai-line"><strong>Confidence:</strong> <span class="ai-confidence">0%</span></div>
-        <div class="ai-actions">
-          <button type="button" class="apply-ai-wrap">Apply Wrap</button>
-          <button type="button" class="apply-ai-keyword">Apply Keyword</button>
-          <button type="button" class="apply-ai-both">Apply Both</button>
-        </div>
-      </div>
 
       <div class="nia-box">
         <div class="nia-title">NIA Buttons</div>
@@ -717,7 +596,6 @@ function renderSinglePanel(index, panelState) {
     }
   }
 
-
   function syncOutput() {
     panelState.output = buildOutput(panelState);
     outputEl.value = panelState.output;
@@ -746,7 +624,6 @@ function renderSinglePanel(index, panelState) {
 
   issueEl.addEventListener("input", () => {
     panelState.Issue = issueEl.value;
-    syncSuggestion();
     syncOutput();
     savePanelsState();
   });
@@ -865,7 +742,6 @@ function renderSinglePanel(index, panelState) {
     panelState.credit = "";
     panelState.refund = "";
     panelState.output = "";
-    panelState.aiSuggestion = null;
     panelState.lastCopy = "";
     savePanelsState();
     renderPanels();
@@ -884,7 +760,6 @@ function renderSinglePanel(index, panelState) {
   }
 
   syncHintsAndMeta();
-  syncSuggestion();
   syncOutput();
   renderPanelKeywords();
 
@@ -1060,4 +935,3 @@ function init() {
 }
 
 init();
-

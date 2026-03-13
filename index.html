@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KIR Note Helper</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+      <div class="brand-icon">HF</div>
+      <h1>KIR Note Helper</h1>
+      <p class="sub">Enter your agent name to continue.</p>
+
+      <label for="loginName">Agent Name</label>
+      <input id="loginName" type="text" placeholder="e.g. John D" />
+
+      <div class="row">
+        <button id="loginBtn" class="btn" type="button">Log In</button>
+      </div>
+
+      <div id="loginError" class="hint error-text"></div>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="brand">
+      <button id="toggleSidebar" class="status-pill" type="button">Hide menu</button>
+      <div class="brand-icon">HF</div>
+      <div>
+        <div class="brand-title">KIR Note Helper</div>
+        <div class="brand-sub">Structured note workflow with guided selections and NIA actions</div>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="status-pill">Agent: <strong id="currentAgent">—</strong></div>
+      <button id="backendStatus" class="status-pill" type="button">Checking...</button>
+      <button id="refreshAnalyticsBtn" class="status-pill" type="button">Refresh Dashboard</button>
+      <button id="exportTodayHistory" class="status-pill" type="button">Export Daily History</button>
+      <a id="openSheet" class="status-pill" href="#" target="_blank" rel="noopener noreferrer">Open Sheet</a>
+      <button id="logoutBtn" class="status-pill danger" type="button">Log Out</button>
+      <div id="copyToast" class="toast"></div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside id="sidebar" class="sidebar">
+      <nav class="nav">
+        <a href="#builder" class="active"><span class="dot"></span> Builder</a>
+        <a href="#dashboard"><span class="dot"></span> Local Dashboard</a>
+        <a href="#cloudDashboard"><span class="dot"></span> Team Dashboard</a>
+        <a href="#recent"><span class="dot"></span> Recent Notes</a>
+        <a href="#cutoff"><span class="dot"></span> Cutoff Clock</a>
+      </nav>
+
+      <div class="sidebar-tip">
+        Start with one panel. Add more only when needed.
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="builder" class="panel">
+        <h2>KIR Note Workflow</h2>
+        <p class="sub">Starts with 1 panel. Add up to 3 panels side by side.</p>
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">Default Panels</div>
+            <div class="kpi-value">1</div>
+            <div class="kpi-hint">Starts simple</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Maximum Panels</div>
+            <div class="kpi-value">3</div>
+            <div class="kpi-hint">Add as needed</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Keyword rule</div>
+            <div class="kpi-value">1 only</div>
+            <div class="kpi-hint">Per panel</div>
+          </div>
+        </div>
+
+        <div class="row builder-toolbar">
+          <button id="addPanelBtn" type="button" class="btn">+ Add Panel</button>
+          <div id="panelCountText" class="hint">1 of 3 panels in use</div>
+        </div>
+
+        <div id="buildersGrid" class="builders-grid"></div>
+
+        <div class="hint">
+          Credit and refund amounts are automatically appended to the resolution line in the generated KIR note.
+        </div>
+      </section>
+
+      <section id="dashboard" class="panel">
+        <h2>Local Dashboard</h2>
+        <p class="sub">Browser-only stats for this device.</p>
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">Total Notes</div>
+            <div id="dashTotalNotes" class="kpi-value">0</div>
+            <div class="kpi-hint">All-time local count</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Notes Today</div>
+            <div id="dashTodayNotes" class="kpi-value">0</div>
+            <div class="kpi-hint">Generated today</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Top Wrap</div>
+            <div id="dashTopWrap" class="kpi-value">—</div>
+            <div class="kpi-hint">Most used locally</div>
+          </div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="subpanel">
+            <h3>Top Keyword</h3>
+            <div id="dashTopKeyword" class="kpi-value">—</div>
+          </div>
+
+          <div class="subpanel">
+            <h3>Most Used Panel</h3>
+            <div id="dashTopPanel" class="kpi-value">—</div>
+          </div>
+
+          <div class="subpanel">
+            <h3>Panel Usage</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Panel</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody id="panelUsageTable"></tbody>
+            </table>
+          </div>
+
+          <div class="subpanel">
+            <h3>Recent Activity</h3>
+            <div id="recentActivityList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cloudDashboard" class="panel">
+        <h2>Team Dashboard</h2>
+        <p class="sub">Live analytics from Google Sheets through Apps Script.</p>
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">Today Top Wrap</div>
+            <div id="cloudTodayTopWrap" class="kpi-value">—</div>
+            <div class="kpi-hint">Across all agents</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Today Top Keyword</div>
+            <div id="cloudTodayTopKeyword" class="kpi-value">—</div>
+            <div class="kpi-hint">Across all agents</div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-label">Today Notes</div>
+            <div id="cloudTodayNotes" class="kpi-value">0</div>
+            <div class="kpi-hint">Saved to sheet</div>
+          </div>
+        </div>
+
+        <div class="analytics-grid">
+          <div class="subpanel">
+            <h3>Current Agent Top Wrap</h3>
+            <div id="cloudUserTopWrap" class="kpi-value">—</div>
+          </div>
+
+          <div class="subpanel">
+            <h3>Current Agent Top Keyword</h3>
+            <div id="cloudUserTopKeyword" class="kpi-value">—</div>
+          </div>
+
+          <div class="subpanel">
+            <h3>Current Agent Total Notes</h3>
+            <div id="cloudUserTotalNotes" class="kpi-value">0</div>
+          </div>
+
+          <div class="subpanel">
+            <h3>Current Agent Notes Today</h3>
+            <div id="cloudUserTodayNotes" class="kpi-value">0</div>
+          </div>
+        </div>
+      </section>
+      <section id="recent" class="panel">
+        <h2>Recent Notes</h2>
+        <p class="sub">Saved in this browser for quick reference.</p>
+        <div id="recentList" class="recent-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <link rel="stylesheet" href="./styles.css" />
+<script type="module" src="./app.js"></script>
+</body>
+</html>

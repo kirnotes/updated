@@ -9,12 +9,14 @@
   --shadow:0 12px 28px rgba(0,0,0,0.08);
   --radius:16px;
   --warn:#b45309;
-  --danger:#a63024;
 }
 
-*{ box-sizing:border-box; }
+*{
+  box-sizing:border-box;
+}
 
-html, body{
+html,
+body{
   margin:0;
   padding:0;
 }
@@ -75,6 +77,10 @@ body{
   flex-wrap:wrap;
 }
 
+.agent-input{
+  width:180px;
+}
+
 .status-pill{
   padding:8px 12px;
   border-radius:999px;
@@ -88,9 +94,9 @@ body{
 }
 
 .status-pill.danger{
-  color:var(--danger);
-  border-color:#f1c0bc;
   background:#fff1f0;
+  border-color:#f1c0bc;
+  color:#a63024;
 }
 
 .layout{
@@ -230,9 +236,17 @@ body{
   align-items:start;
 }
 
-.builders-grid[data-panels="1"]{ grid-template-columns:1fr; }
-.builders-grid[data-panels="2"]{ grid-template-columns:repeat(2, minmax(320px, 1fr)); }
-.builders-grid[data-panels="3"]{ grid-template-columns:repeat(3, minmax(320px, 1fr)); }
+.builders-grid[data-panels="1"]{
+  grid-template-columns:1fr;
+}
+
+.builders-grid[data-panels="2"]{
+  grid-template-columns:repeat(2, minmax(320px, 1fr));
+}
+
+.builders-grid[data-panels="3"]{
+  grid-template-columns:repeat(3, minmax(320px, 1fr));
+}
 
 .builder-card{
   border:1px solid var(--line);
@@ -293,6 +307,22 @@ body{
   font-weight:700;
 }
 
+.size-btn{
+  border:none;
+  border-radius:999px;
+  padding:6px 10px;
+  background:#eef7ef;
+  border:1px solid #cfe4d5;
+  color:#1f2a24;
+  cursor:pointer;
+  font-weight:700;
+  font-size:12px;
+}
+
+.size-btn:hover{
+  background:#e5f3e9;
+}
+
 label{
   display:block;
   font-size:12px;
@@ -303,6 +333,7 @@ label{
 
 select,
 input[type="text"],
+input[type="date"],
 textarea{
   width:100%;
   padding:12px;
@@ -408,7 +439,9 @@ textarea:focus{
   font-weight:700;
 }
 
-.toast.show{ display:inline-block; }
+.toast.show{
+  display:inline-block;
+}
 
 .hint{
   font-size:12px;
@@ -417,7 +450,7 @@ textarea:focus{
 }
 
 .error-text{
-  color:var(--danger);
+  color:#a63024;
 }
 
 .hint-card{
@@ -488,7 +521,8 @@ table{
   font-size:13px;
 }
 
-th, td{
+th,
+td{
   padding:8px 6px;
   border-bottom:1px solid var(--line);
   text-align:left;
@@ -546,11 +580,12 @@ th{
 .login-overlay{
   position:fixed;
   inset:0;
-  background:rgba(31,42,36,0.45);
+  background:rgba(0,0,0,0.32);
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:100;
+  z-index:999;
+  padding:20px;
 }
 
 .login-overlay.hidden{
@@ -558,17 +593,278 @@ th{
 }
 
 .login-card{
-  width:min(440px, calc(100vw - 32px));
+  width:min(100%,420px);
   background:#fff;
   border:1px solid var(--line);
+  border-radius:24px;
   box-shadow:var(--shadow);
-  border-radius:20px;
   padding:24px;
 }
 
 .login-card h1{
-  margin:14px 0 8px;
-  font-size:22px;
+  margin:16px 0 6px;
+  font-size:32px;
+  line-height:1.1;
+}
+
+.cutoff-top{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  gap:16px;
+  margin-bottom:16px;
+}
+
+.cutoff-time-card,
+.cutoff-date-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+}
+
+.cutoff-time-label,
+.cutoff-date-label{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:8px;
+  font-weight:700;
+}
+
+.cutoff-time-value{
+  font-size:34px;
+  font-weight:900;
+  line-height:1;
+  margin-bottom:8px;
+  color:#1f2a24;
+}
+
+.cutoff-time-zone{
+  font-size:13px;
+  color:var(--muted);
+}
+
+.cutoff-date-title{
+  font-size:18px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:#4f46e5;
+}
+
+.cutoff-date-picker{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.cutoff-day-chip{
+  border:1px solid #d7dcef;
+  background:#fff;
+  border-radius:12px;
+  min-width:58px;
+  padding:10px 8px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:800;
+  color:#1f2a24;
+  transition:all .15s ease;
+}
+
+.cutoff-day-chip:hover{
+  border-color:#9ca3f7;
+  background:#f5f3ff;
+}
+
+.cutoff-day-chip.active{
+  background:#5b4ce6;
+  color:#fff;
+  border-color:#5b4ce6;
+}
+
+.cutoff-day-chip .dow{
+  display:block;
+  font-size:11px;
+  font-weight:900;
+  text-transform:uppercase;
+}
+
+.cutoff-day-chip .dom{
+  display:block;
+  font-size:20px;
+  line-height:1.05;
+  margin:3px 0;
+}
+
+.cutoff-day-chip .mon{
+  display:block;
+  font-size:11px;
+  opacity:.9;
+}
+
+.cutoff-more-btn{
+  border:1px solid #d7dcef;
+  background:#fff;
+  border-radius:12px;
+  padding:12px 10px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.cutoff-brand-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.cutoff-card{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:18px;
+  background:#fff;
+}
+
+.cutoff-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:10px;
+}
+
+.cutoff-brand{
+  font-size:28px;
+  font-weight:900;
+  color:#1f2a24;
+  line-height:1.1;
+}
+
+.cutoff-meta{
+  font-size:14px;
+  color:#4b5563;
+  line-height:1.7;
+}
+
+.cutoff-meta strong{
+  color:#1f2a24;
+}
+
+.cutoff-timer{
+  margin-top:8px;
+  font-size:14px;
+  font-weight:800;
+  color:#a63024;
+}
+
+.cutoff-timer.before{
+  color:#1d4ed8;
+}
+
+.cutoff-pill{
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:900;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+
+.cutoff-pill.before{
+  background:#dbeafe;
+  color:#1d4ed8;
+  border-color:#bfdbfe;
+}
+
+.cutoff-pill.after{
+  background:#fee2e2;
+  color:#b91c1c;
+  border-color:#fecaca;
+}
+
+.cutoff-pill.na{
+  background:#e5e7eb;
+  color:#374151;
+  border-color:#d1d5db;
+}
+
+.cutoff-pill.unavailable{
+  background:#f3f4f6;
+  color:#9ca3af;
+  border-color:#e5e7eb;
+}
+
+.cutoff-transit-row{
+  margin:8px 0 6px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.cutoff-transit-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+  background:#f3f4f6;
+  color:#6b7280;
+  border:1px solid #e5e7eb;
+}
+
+.cutoff-transit-badge.active{
+  background:#ede9fe;
+  color:#5b21b6;
+  border-color:#ddd6fe;
+}
+
+.cutoff-table-wrap{
+  overflow:auto;
+}
+
+.cutoff-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  font-size:13px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.cutoff-table th,
+.cutoff-table td{
+  padding:12px 10px;
+  border-bottom:1px solid var(--line);
+  text-align:center;
+}
+
+.cutoff-table th:first-child,
+.cutoff-table td:first-child{
+  text-align:left;
+  font-weight:800;
+}
+
+.cutoff-table thead th{
+  background:#f8fafc;
+  color:#6b7280;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+}
+
+.cutoff-table tr:last-child td{
+  border-bottom:none;
+}
+
+.cutoff-check{
+  color:#5b4ce6;
+  font-weight:900;
+}
+
+.cutoff-dash{
+  color:#9ca3af;
 }
 
 @media (max-width:1100px){
@@ -578,7 +874,9 @@ th{
 }
 
 @media (max-width:900px){
-  .layout{ display:block; }
+  .layout{
+    display:block;
+  }
 
   .sidebar{
     width:100%;
@@ -587,9 +885,13 @@ th{
     border-bottom:1px solid var(--line);
   }
 
-  .sidebar.is-hidden{ display:none; }
+  .sidebar.is-hidden{
+    display:none;
+  }
 
-  .main{ padding:14px; }
+  .main{
+    padding:14px;
+  }
 
   .kpis,
   .grid2,
@@ -606,59 +908,20 @@ th{
   }
 
   .builder-card{
-  width:100% !important;
-  min-width:0;
-}
-.cutoff-card{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
-  background:#fff;
-}
+    width:100% !important;
+    min-width:0;
+  }
 
-.cutoff-card-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin-bottom:8px;
-}
+  .cutoff-top{
+    grid-template-columns:1fr;
+  }
 
-.cutoff-brand{
-  font-weight:800;
-  font-size:15px;
-}
+  .cutoff-brand{
+    font-size:22px;
+  }
 
-.cutoff-meta{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.5;
-}
-
-.cutoff-pill{
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-  border:1px solid transparent;
-  white-space:nowrap;
-}
-
-.cutoff-pill.before{
-  background:#e6f7ec;
-  color:#0d5130;
-  border-color:#b8dfc7;
-}
-
-.cutoff-pill.after{
-  background:#fde8e7;
-  color:#a63024;
-  border-color:#f1c0bc;
-}
-
-.cutoff-pill.na{
-  background:#eef2f7;
-  color:#475569;
-  border-color:#d5dde8;
-}
+  .cutoff-card-head{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 }

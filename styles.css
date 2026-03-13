@@ -977,6 +977,47 @@ th{
     align-items:flex-start;
     flex-direction:column;
   }
+  .wrap-guide-box{
+  margin-top:12px;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid #b8d8c8;
+  background:#eaf4e7;
 }
+
+.wrap-guide-title{
+  font-size:12px;
+  font-weight:900;
+  text-align:center;
+  color:#1f2a24;
+  margin-bottom:6px;
+}
+
+.wrap-guide-selected{
+  margin-bottom:8px;
+}
+
+.wrap-guide-current{
+  display:block;
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  background:#d9edcf;
+  border:1px solid #a8c79e;
+  font-weight:800;
+  color:#29452c;
+  text-align:left;
+  white-space:normal;
+}
+
+.wrap-guide-text{
+  font-size:13px;
+  line-height:1.45;
+  color:#1f2a24;
+  white-space:pre-wrap;
+  font-weight:700;
+}
+}
+
 
 

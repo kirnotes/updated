@@ -1,4 +1,3 @@
-
 function cleanResolutionHint(text) {
   return String(text || "")
     .replace(/==========Remove if not applicable==========[\s\S]*$/i, "")
@@ -1444,643 +1443,262 @@ If you have both a discount code and a credit in your account, we'll apply the d
 4. View the credit amount on your account.`
     }
   }
-};  "Account - Cancellation - Duplicated Subscription": `Customer requests cancellation of subscription due to a duplicate subscription.`,
-
-  "Account - Cancellation - Customer Not Retained": `The customer requested subscription cancellation, and the agent was not able to prevent the customer from canceling.
-
-Note:
-* For before-deadline box cancellation, please use "Account- Skip/Unskip"
-* For 1st box before the deadline cancellation, please use "Account - 1st box change/Question".
-* For after-deadline box cancellation, please use "Account - After deadline change request".`,
-
-  "Account - Cancellation - Customer Retained": `The customer requested subscription cancellation, and the agent prevented the customer from canceling the subscription.
-
-Note:
-* For before-deadline box cancellation, please use "Account- Skip/Unskip".
-* For 1st box before the deadline cancellation, please use "Account - 1st box change/Question".
-* For after-deadline box cancellation, please use "Account - After deadline change request".`,
-
-  "Account - Data Protection": `Questions or requests related to data protection, such as deleting personal data or obtaining a copy of personal information.`,
-
-  "Account - Loyalty Program": `Interactions involving the HelloFresh+ Loyalty Program. Within the program, the customer unlocks milestones and rewards based on their order count. Customers need to opt in to the program, meaning they need to actively sign up to start collecting rewards.`,
-
-  "Account - Meal Swap / Recipe Preference": `Inquiries about recipes and their dietary requirements, meal and add-ons swaps.`,
-
-  "Account - Reactivation": `Queries related to account reactivation.`,
-
-  "Account - Skip/Unskip": `Pause/unpause box requests. This code should be used for BOX cancellation (except 1st box) requested before the deadline. In this case, the customer will continue with their subscription.
-
-Note:
-* For after-deadline box cancellation, please use "Account - After deadline change request".`,
-
-  "Account -Update account / subscription details": `Inquiries related to personal and subscription information changes before the deadline, i.e. delivery day, address, edit phone number, edit email address, payment method change, meal size changes, password reset. This also includes issues related to account access, i.e. customer cannot access their accounts.
-
-General inquiry about RTE/Factor meals.`,
-
-  "Complaint - Food Safety": `Food safety-related complaints such as allergic reaction, foreign objects found in products, and food poisoning/foodborne illness.
-Raw or undercooked protein (only applicable to RTE and The Pets Table)
-
-Possible reasons for contact:
-* Food Safety Recalls
-* Food Safety Escalation`,
-
-  "Complaint - Quality": `Complaints on the ingredients quality and packaging issues, i.e. damaged, poor quality/value perception, issue with temperature, damaged external packaging, etc.`,
-
-  "Complaint - Pick & Pack": `Complaints related to pick and pack issues, i.e. incorrect, missing, or extra ingredients or meal kits.`,
-
-  "Complaint - Website / App / Internal Tech Error": `Complaints on the app/website/internal technical issues, including changes made not applied, glitches, system outages, etc.`,
-
-  "Logistics - Delivery status": `Inquiries related to delivery status and ETA requests within the delivery window.`,
-
-  "Complaint - Logistic - Courier company": `Complaints due to property damaged by logistics company, driver behavior, delivery instructions not followed, leave safe, etc.
-
-Possible reasons for contact:
-* Damaged boxes by driver or courier
-* HFDN logistics issue (not including causes resulting in no delivery)`,
-
-  "Complaint - Logistics - Early/Late": `Complaints due to delivery before or after the advised time slot/delivery window (NOT the ETA provided by the courier). Applicable when the box was delivered after 1 to 2 days of the expected delivery date.
-
-For US only: Please consider that The Pets Table and Factor Form only have 4+ days late.`,
-
-  "Complaint - Logistics - Failed delivery": `Complaints due to any cause resulting in no delivery.
-
-Possible reasons for contact:
-* Request for replacement or remake
-* HFDN logistics issue resulting in no delivery`,
-
-  "Marketing - Applying Voucher / Gift Card": `Inquiries concerning vouchers and codes, such as expired or codes not applied to orders, and escalations.
-
-Possible reasons for contact:
-* Loyalty Reward
-* Reactivation Code`,
-
-  "Marketing - Communication": `Inquiries related to any comms about our marketing offers, collaboration requests, product endorsement proposals, unsubscribing from comms, partnership requests, advertisement, etc.
-
-Possible reasons for contact:
-* Free Meals Promotion
-* Percentage Discount`,
-
-  "Marketing - Direct Sales and Reactivation team": `Issues related to any direct sales agents, door-to-door, outbound call center, and reactivation teams.
-
-Possible reasons for contact:
-* Direct sales behavior`,
-
-  "Marketing - Referral": `Any referral issues including policy, referral credit, Helloshare code, etc.`,
-
-  "Marketing - Voucher Fraud": `Interactions involving voucher(s)/freebie fraud.`,
-
-  "Other - Connection Issue": `Connection issues experienced by CC agents, i.e. customer can't see the agents' answers, and calls are disconnected.
-
-Wrap code to be used only when the query/issue is not yet known.`,
-
-  "Other - Non-customer query": `Non-customers enquiries, i.e.:
-* Courier proposal, event invites, etc
-* Requests about POCs in the company
-* Applications
-* Passed on details (BBB-Better Business Bureau), etc.
-
-Note: Refer to market guidelines as to what are identified as general inquiries.`,
-
-  "Other - Sustainability / Sourcing": `Inquiries about resources, suppliers, alternatives, packaging, recycling, ice packs and ice pack disposal.`,
-
-  "US ONLY: CISP Interaction": `Interactions with customers who are using hostile or derogatory language toward agents.`,
-
-  "Payments - Charge breakdown": `Charge breakdown queries.
-
-Possible reasons for contact:
-* Add-on / Extras
-* Amazon Prime
-* Confirmed payment
-* Delivery fee
-* Double charge
-* Incorrect charge
-* Invoice
-* Price change
-* Regional fee
-* Standard shipping
-* Unaware of surcharge
-* Unauthorised charge`,
-
-  "Payments - Credit/ Refund": `Inquiries on credit/refund.
-
-Possible reasons for contact:
-* HelloFresh Cash
-* Credit balance/confirmation
-* Customer received credit originally and now would prefer a refund`,
-
-  "Payments - Outstanding / Dunning": `Queries from customers that have outstanding payments or are in dunning.
-
-For US: This includes Unpaid Shipped Boxes.`
 };
-export const NIA_LIBRARY = {
-  "Account - Cancellation - Customer Not Retained": {
-    "Can't Afford / Out of Budget": {
-      hf: `To cancel your subscription with HelloFresh via website:
-1. Log in on the HelloFresh website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info'.
-4. Click on 'cancel my subscription' at the bottom of the page.
-5. Follow the steps to deactivate.`,
-      everyplate: `We hate to let you go, but as requested, I cancelled your EveryPlate subscription and any future boxes. You will be receiving a confirmation on your email regarding the cancellation. If there's anything we can do to encourage you cooking with us in the future, please don’t hesitate to let us know.
 
-If you do choose to reactivate your subscription, here are some simple instructions to do so:
-- Log in to your EveryPlate account
-- You will automatically be directed to 'Plan Settings'
-- Select 'Reactivate'`,
-      general: `To cancel your subscription with XXX via website:
-1. Log in on the XXX website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info' or open Plan Settings.
-4. Click on 'cancel my subscription' or the cancellation option at the bottom of the page.
-5. Follow the steps to deactivate.`
-    },
-    "Cancellation - [Insert reason]": {
-      hf: `To cancel your subscription with HelloFresh via website:
-1. Log in on the HelloFresh website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info'.
-4. Click on 'cancel my subscription' at the bottom of the page.
-5. Follow the steps to deactivate.`,
-      everyplate: `We hate to let you go, but as requested, I cancelled your EveryPlate subscription and any future boxes. You will be receiving a confirmation on your email regarding the cancellation. If there's anything we can do to encourage you cooking with us in the future, please don’t hesitate to let us know.
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
 
-If you do choose to reactivate your subscription, here are some simple instructions to do so:
-- Log in to your EveryPlate account
-- You will automatically be directed to 'Plan Settings'
-- Select 'Reactivate'`,
-      general: `To cancel your subscription with XXX via website:
-1. Log in on the XXX website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info' or open Plan Settings.
-4. Click on 'cancel my subscription' or the cancellation option at the bottom of the page.
-5. Follow the steps to deactivate.`
-    },
-    "No Reason Provided": {
-      hf: `To cancel your subscription with HelloFresh via website:
-1. Log in on the HelloFresh website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info'.
-4. Click on 'cancel my subscription' at the bottom of the page.
-5. Follow the steps to deactivate.`,
-      everyplate: `We hate to let you go, but as requested, I cancelled your EveryPlate subscription and any future boxes. You will be receiving a confirmation on your email regarding the cancellation. If there's anything we can do to encourage you cooking with us in the future, please don’t hesitate to let us know.
+function normalizeKeyword(keyword) {
+  return KEYWORD_ALIASES[keyword] || keyword;
+}
 
-If you do choose to reactivate your subscription, here are some simple instructions to do so:
-- Log in to your EveryPlate account
-- You will automatically be directed to 'Plan Settings'
-- Select 'Reactivate'`,
-      general: `To cancel your subscription with XXX via website:
-1. Log in on the XXX website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info' or open Plan Settings.
-4. Click on 'cancel my subscription' or the cancellation option at the bottom of the page.
-5. Follow the steps to deactivate.`
-    },
-    "Trial Box": {
-      hf: `To cancel your subscription with HelloFresh via website:
-1. Log in on the HelloFresh website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info'.
-4. Click on 'cancel my subscription' at the bottom of the page.
-5. Follow the steps to deactivate.`,
-      everyplate: `We hate to let you go, but as requested, I cancelled your EveryPlate subscription and any future boxes. You will be receiving a confirmation on your email regarding the cancellation. If there's anything we can do to encourage you cooking with us in the future, please don’t hesitate to let us know.
+function normalizeWrapName(wrapName) {
+  return WRAP_ALIASES[wrapName] || wrapName;
+}
 
-If you do choose to reactivate your subscription, here are some simple instructions to do so:
-- Log in to your EveryPlate account
-- You will automatically be directed to 'Plan Settings'
-- Select 'Reactivate'`,
-      general: `To cancel your subscription with XXX via website:
-1. Log in on the XXX website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info' or open Plan Settings.
-4. Click on 'cancel my subscription' or the cancellation option at the bottom of the page.
-5. Follow the steps to deactivate.`
-    },
-    "Unaware of Subscription": {
-      hf: `To cancel your subscription with HelloFresh via website:
-1. Log in on the HelloFresh website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info'.
-4. Click on 'cancel my subscription' at the bottom of the page.
-5. Follow the steps to deactivate.`,
-      everyplate: `We hate to let you go, but as requested, I cancelled your EveryPlate subscription and any future boxes. You will be receiving a confirmation on your email regarding the cancellation. If there's anything we can do to encourage you cooking with us in the future, please don’t hesitate to let us know.
+function ensureBrandShape(entry = {}) {
+  return {
+    hf: entry.hf || null,
+    everyplate: entry.everyplate || entry.EP || null,
+    general: entry.general || null
+  };
+}
 
-If you do choose to reactivate your subscription, here are some simple instructions to do so:
-- Log in to your EveryPlate account
-- You will automatically be directed to 'Plan Settings'
-- Select 'Reactivate'`,
-      general: `To cancel your subscription with XXX via website:
-1. Log in on the XXX website.
-2. Click on 'Your Account Settings'.
-3. Click the small edit box under 'Subscription Info' or open Plan Settings.
-4. Click on 'cancel my subscription' or the cancellation option at the bottom of the page.
-5. Follow the steps to deactivate.`
+function getBaseNiaTemplate(wrapName, library) {
+  const wrap = library[wrapName] || {};
+  for (const existingKeyword of Object.keys(wrap)) {
+    const candidate = ensureBrandShape(wrap[existingKeyword]);
+    if (candidate.hf || candidate.everyplate || candidate.general) {
+      return candidate;
     }
-  },
+  }
+  return { hf: null, everyplate: null, general: null };
+}
 
-  "Account - Skip/Unskip": {
-    "Skip - Can't afford": {
-      hf: `In case you need to skip another week. You can easily do this on your account:
+function buildFallbackNia(wrapName, keyword) {
+  const lowerWrap = wrapName.toLowerCase();
 
-Here’s how:
-1. Log in to your account.
-2. Click on 'My Menu'.
-3. Select the delivery day of the week you’d like to skip, then click 'Skip Week'.`,
-      general: `In case you need to skip another week, you can easily do this on your account:
+  if (lowerWrap.includes("cancellation")) {
+    return {
+      hf: `To cancel your subscription with HelloFresh via website:
+1. Log in on the HelloFresh website.
+2. Click on 'Account Settings'.
+3. Open your subscription or plan settings.
+4. Select the cancellation option at the bottom of the page.
+5. Follow the prompts to confirm the cancellation.`,
+      everyplate: `To cancel your EveryPlate subscription:
+1. Log in to your EveryPlate account.
+2. Open 'Plan Settings'.
+3. Select the cancellation option shown on the page.
+4. Follow the prompts to confirm.
 
-Here’s how:
-1. Log in to your account.
-2. Go to 'My Menu' or your delivery page.
-3. Select the delivery week you’d like to skip, then click 'Skip Week'.`
-    },
-    "Skip - No reason provided": {
-      hf: `In case you need to skip another week. You can easily do this on your account:
-
-Here’s how:
-1. Log in to your account.
-2. Click on 'My Menu'.
-3. Select the delivery day of the week you’d like to skip, then click 'Skip Week'.`,
-      general: `In case you need to skip another week, you can easily do this on your account:
-
-Here’s how:
-1. Log in to your account.
-2. Go to 'My Menu' or your delivery page.
-3. Select the delivery week you’d like to skip, then click 'Skip Week'.`
-    },
-    "Skip - On vacation": {
-      hf: `In case you need to skip another week. You can easily do this on your account:
-
-Here’s how:
-1. Log in to your account.
-2. Click on 'My Menu'.
-3. Select the delivery day of the week you’d like to skip, then click 'Skip Week'.`,
-      general: `In case you need to skip another week, you can easily do this on your account:
-
-Here’s how:
-1. Log in to your account.
-2. Go to 'My Menu' or your delivery page.
-3. Select the delivery week you’d like to skip, then click 'Skip Week'.`
-    }
-  },
-
-  "Marketing - Communication": {
-    "Preferences": {
-      hf: `All active customers can receive a meal selection email reminder. Just follow these steps to update your email preferences:
-
-1. Log into your HelloFresh Account.
-2. Click on your name on the upper right hand corner and click on "Account Settings" and then choose "Notification Settings".
-3. Make your selection to subscribe or unsubscribe from certain email communications from HelloFresh.`,
-      general: `All active customers can receive a meal selection email reminder. Just follow these steps to update your email preferences:
-
-1. Log into your XXX account.
-2. Go to Account Settings.
-3. Open Notification Settings.
-4. Make your selection to subscribe or unsubscribe from certain email communications.`
-    },
-    "Unsubscribe from Comms": {
-      hf: `1. Log in to your account.
-2. Click on your name in the upper-right hand corner and choose 'Account Settings'.
-3. Select 'Notification Settings'.
-4. Make your changes to subscribe or unsubscribe from certain emails.`,
-      general: `1. Log in to your account.
-2. Go to Account Settings.
-3. Select 'Notification Settings' or email preferences.
-4. Make your changes to subscribe or unsubscribe from certain emails.`
-    }
-  },
-
-  "Account -Update account / subscription details": {
-    "Email Address Update": {
-      hf: `You can update your email address by following the steps below:
-
-1. Log in to your account.
-2. Click on your name in the upper right-hand corner and head to your Account Settings.
-3. Select 'Account Info'.
-4. Click 'Edit' on 'Personal Info'.
-5. Make the necessary changes and click 'Save'.`,
-      general: `You can update your email address by following the steps below:
-
-1. Log in to your account.
-2. Go to your Account Settings.
-3. Select 'Account Info' or 'Personal Info'.
-4. Click 'Edit'.
-5. Make the necessary changes and click 'Save'.`
-    },
-    "Password Reset": {
-      hf: `Alternatively, you may update your password through these simple steps:
-
-1. Log in to your account.
-2. Click on your name in the upper right-hand corner and choose 'Account Settings'.
-3. Select 'Account Info'.
-4. Click 'Edit' on 'Password'.
-5. Make the necessary changes then click on 'Save' to confirm your choice.`,
-      general: `Alternatively, you may update your password through these simple steps:
-
-1. Log in to your account.
-2. Go to 'Account Settings'.
-3. Select 'Account Info' or 'Login Details'.
-4. Click 'Edit' on 'Password'.
-5. Make the necessary changes then click 'Save'.`
-    },
-    "Change Meal Size": {
-      hf: `1. Log in to your account.
-2. Go to 'My Menu' for the week you want to switch the plan.
-3. Click on 'Edit Delivery'.
-4. You will see the option 'Change Box Size'.
-5. You can now select the 'Number of People' and the 'Number of Meals'.
-6. Select your meals and extras.
-7. Click 'Save'.`,
-      general: `1. Log in to your account.
-2. Go to your menu or delivery page.
-3. Click 'Edit Delivery' or plan settings.
-4. Change your box size, number of people, or number of meals.
-5. Save your changes.`
-    },
-    "Delivery Address Change": {
-      hf: `You may follow the steps below in changing your delivery address successfully. This will apply on your upcoming delivery. Just a friendly reminder to update your address 5 days before the delivery date.
-
-1. Log in to your account.
-2. Click on your name in the upper right-hand corner and head to your Account Settings.
-3. Select 'Plan Settings'.
-4. Scroll down to 'Delivery and payment'.
-5. Click 'Edit' on 'Delivery Address'.
-6. You can also add any special 'Delivery Instructions' for the delivery driver to follow.
-7. Make the necessary changes and click 'Save'.`,
-      general: `You may follow the steps below in changing your delivery address successfully:
-
+If you'd like to come back later, you can also reactivate from the same section.`,
+      general: `To cancel your subscription with XXX:
 1. Log in to your account.
 2. Go to Account Settings or Plan Settings.
-3. Open the delivery section.
-4. Edit your delivery address and instructions.
-5. Save your changes.`
-    },
-    "Leave Safe / Delivery Instructions": {
-      hf: `You may follow the steps below:
+3. Open your subscription details.
+4. Select the cancellation option.
+5. Follow the prompts to confirm.`
+    };
+  }
 
-1. Log in to your account.
-2. Click on your name in the upper right-hand corner and head to your Account Settings.
-3. Select 'Plan Settings'.
-4. Scroll down to 'Delivery and payment'.
-5. Click 'Edit' on 'Delivery Address'.
-6. You can also add any special 'Delivery Instructions' for the delivery driver to follow.
-7. Make the necessary changes and click 'Save'.`,
-      general: `You may follow the steps below:
-
-1. Log in to your account.
-2. Go to Account Settings or Plan Settings.
-3. Open the delivery section.
-4. Edit your address or delivery instructions.
-5. Save your changes.`
-    },
-    "Delivery Day": {
-      hf: `1. Log in to your account.
-2. Click on your name in the upper right-hand corner and head to your Account Settings.
-3. Scroll down to the 'Delivery and payment' section.
-4. Click 'Edit' next to 'Delivery window' option, then select your desired delivery day.
-5. Click 'Save'.`,
-      general: `1. Log in to your account.
-2. Go to Account Settings or Plan Settings.
-3. Open the delivery section.
-4. Edit your delivery day or delivery window.
-5. Click 'Save'.`
-    },
-    "Payment Method Change": {
-      hf: `Alternatively, you may follow the steps below:
-
-1. Log in to your account.
-2. Click on your name in the upper right-hand corner and select Account Settings from the drop-down menu.
-3. Scroll down to 'Payment Methods' on the Plan Settings page.
-4. Alternatively, you can select 'Payment Methods' from the option on the left.
-5. Select 'Change Payment Method'.
-6. Click 'Add'.
-7. Enter new payment information, click 'Add' then click 'Save'.`,
-      general: `Alternatively, you may follow the steps below:
-
-1. Log in to your account.
-2. Go to Account Settings or Plan Settings.
-3. Open Payment Methods.
-4. Select Change Payment Method or Add Payment Method.
-5. Enter your new payment information and save.`
-    }
-  },
-
-  "Account - Meal Swap / Recipe Preference": {
-    "Preference": {
-      hf: `1. Log in to your account on the app.
-2. Click on the 'Settings' icon at the bottom right-hand corner.
-3. Click on 'Plan Settings' and select the plan you would like to update.
-4. Click 'Menu Preferences' then select your desired preference.
-5. A pop up will appear for you to confirm your preferences. Click 'Confirm'.
-6. Click the back arrow in the upper left-hand corner.`,
-      general: `1. Log in to your account.
-2. Open Settings or Plan Settings.
-3. Select Menu Preferences.
-4. Choose your desired preference.
-5. Confirm and save your changes.`
-    },
-    "Meal Swap": {
-      hf: `1. Log into your account and click on 'My Menu'.
-2. Navigate to the delivery week whose menu you'd like to change by clicking on the arrow buttons.
-3. If you'd like to switch one meal for another, remove the selected meal by clicking the 'minus' button and add the meal you'd like to receive by clicking the 'add' button.
-4. You may add additional meals by clicking on 'Add Extra Meal' below the recipe photo.
-5. Click 'Save'.
-6. Select any extras you would like to add, if any.
-7. You will now see a message confirming your meal selection has been saved.
-8. If you’re not in love with any of the recipes, you can easily skip that week’s delivery by clicking 'Skip this Week' in the 'Edit Delivery' tab above the menu.`,
-      general: `1. Log into your account and click on 'My Menu'.
-2. Navigate to the delivery week whose menu you'd like to change.
-3. Remove the selected meal and add the meal you'd like instead.
-4. Click 'Save'.`
-    },
-    "Recipe Copy Request (PDF)": {
-      hf: `Recipe cards for your selected meals will come in your weekly delivery. You may also download them by accessing the "My Menu" page.
-
-1. Click on "My Menu".
-2. Click the picture of the recipe.
-3. Click "See full recipe".
-4. When the recipe opens click the down arrow to download.`,
-      general: `Recipe cards for your selected meals may be available in your account.
-
-1. Click on "My Menu".
-2. Open the recipe.
-3. Click "See full recipe".
-4. Download the recipe if the option is available.`
-    },
-    "Nutritional Information": {
-      hf: `Here is how to find it:
-
-1. Log in to your account.
-2. Click on 'My Menu'.
-3. Click on an image of a meal that you would like to get nutritional information on.
-4. A pop-up window will appear, select 'See Full Recipe' from the bottom.
-5. In a new window, the nutrition information will be located to the right of the ingredients list.
-6. The nutrition information provided is based on a per-serving amount.`,
-      general: `Here is how to find it:
+  if (lowerWrap.includes("skip/unskip")) {
+    return {
+      hf: `You can manage your upcoming delivery from your HelloFresh account:
 
 1. Log in to your account.
 2. Go to 'My Menu'.
-3. Open the meal you would like information on.
-4. Select 'See Full Recipe' if available.
-5. Nutrition information is usually found near the ingredients or recipe details.`
-    },
-    "Meal Selection / Menu / Recipes": {
-      hf: `1. Log into your account and click on 'My Menu'.
-2. Navigate to the delivery week whose menu you'd like to change by clicking on the arrow buttons.
-3. If you'd like to switch one meal for another, remove the selected meal and add the meal you'd like to receive.
-4. Click 'Save'.`,
-      general: `1. Log into your account and click on 'My Menu'.
-2. Navigate to the week you'd like to manage.
-3. Update your selected meals.
-4. Click 'Save'.`
-    }
-  },
+3. Select the delivery week you want to manage.
+4. Choose 'Skip Week' or restore the week if it was previously skipped.`,
+      everyplate: `You can manage your upcoming EveryPlate delivery directly from your account:
 
-  "Complaint - Pick & Pack": {
-    "Missing": {
-      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+1. Log in to your account.
+2. Open your upcoming orders or menu page.
+3. Select the week you want to manage.
+4. Choose to skip or unskip the week as needed.`,
+      general: `You can manage your upcoming delivery from your account:
 
-1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
-2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
-3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
-4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
-      general: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+1. Log in to your account.
+2. Open your menu or delivery page.
+3. Select the delivery week you want to manage.
+4. Choose to skip or restore the week.`
+    };
+  }
 
-1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
-2. Select which box, meal, and ingredient is damaged or missing.
-3. Submit your report to receive the applicable outcome.
-4. If the issue is above the self-service limit, you may be prompted to contact support.`
-    },
-    "Incorrect": {
-      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+  if (lowerWrap.includes("update account") || lowerWrap.includes("subscription details")) {
+    return {
+      hf: `You can update this from your HelloFresh account:
 
-1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
-2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
-3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
-4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
-      general: `For your own convenience in the future, you may be able to submit a self-report for incorrect, missing, or damaged ingredients through the app or website.`
-    }
-  },
+1. Log in to your account.
+2. Go to 'Account Settings' or 'Plan Settings'.
+3. Open the section related to ${keyword}.
+4. Make the necessary changes.
+5. Click 'Save' to confirm.`,
+      everyplate: `You can update this from your EveryPlate account:
 
-  "Complaint - Quality": {
-    "Damage": {
-      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+1. Log in to your account.
+2. Open 'Plan Settings' or account settings.
+3. Go to the section related to ${keyword}.
+4. Make the necessary changes.
+5. Save your update.`,
+      general: `You can update this from your account:
 
-1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
-2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
-3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
-4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
-      general: `For your own convenience in the future, you may be able to submit a self-report for damaged ingredients through the app or website.
+1. Log in to your account.
+2. Go to Account Settings or Plan Settings.
+3. Open the section related to ${keyword}.
+4. Make the necessary changes.
+5. Save your update.`
+    };
+  }
 
-1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
-2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged or missing.
-3. After that you will be able to submit your report and automatically have the applicable outcome applied.
-4. If the issue is above the self-service limit, you may be prompted to contact support.`
-    },
-    "Spoiled": {
-      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+  if (lowerWrap.includes("meal swap") || lowerWrap.includes("recipe")) {
+    return {
+      hf: `You can manage this from your HelloFresh account:
 
-1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
-2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
-3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
-4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
-      general: `For your own convenience in the future, you may be able to submit a self-report for spoiled ingredients through the app or website.`
-    }
-  },
+1. Log in to your account.
+2. Go to 'My Menu' or your plan settings.
+3. Open the section related to your meals, recipes, or preferences.
+4. Make your selection.
+5. Save the changes if prompted.`,
+      everyplate: `You can manage this from your EveryPlate account:
 
-  "Marketing - Applying Voucher / Gift Card": {
-    "Gift Card": {
-      hf: `So here's what you need to do to redeem your gift card:
-1. Head to HelloFresh.com.
-2. Click 'Gift Cards' from the menu at the top.
-3. Click the 'Redeem gift card' link, you can also scroll to the bottom of the page and click 'Redeem a Gift Card'.
-4. You will then be redirected to enter your code.`,
-      general: `So here's what you need to do to redeem your gift card:
-1. Head to the website.
-2. Click 'Gift Cards' from the menu.
-3. Click the option to redeem a gift card.
-4. Enter your code and follow the prompts.`
-    },
-    "Gift Card Confirmation": {
-      hf: `So here's what you need to do to redeem your gift card:
-1. Head to HelloFresh.com.
-2. Click 'Gift Cards' from the menu at the top.
-3. Click the 'Redeem gift card' link, you can also scroll to the bottom of the page and click 'Redeem a Gift Card'.
-4. You will then be redirected to enter your code.`,
-      general: `To redeem or confirm your gift card:
-1. Open the Gift Cards page.
-2. Choose the redeem option.
-3. Enter your code.
+1. Log in to your account.
+2. Open your menu or plan settings.
+3. Go to the relevant meal or preference section.
+4. Update your selection.
+5. Save your changes.`,
+      general: `You can manage this from your account:
+
+1. Log in to your account.
+2. Open your menu or plan settings.
+3. Go to the relevant meals, recipes, or preferences section.
+4. Update your selection.
+5. Save your changes.`
+    };
+  }
+
+  if (lowerWrap.includes("quality") || lowerWrap.includes("pick & pack")) {
+    return {
+      hf: `For your convenience in the future, you may be able to self-report this issue through the HelloFresh app or website:
+
+1. Go to the 'Contact Us' page.
+2. Select 'Report an Error' if available.
+3. Choose the affected box, meal, and ingredient.
+4. Submit the report to receive the applicable resolution.
+
+If the concern is above the self-service limit, please contact support.`,
+      everyplate: `For your convenience in the future, you may be able to self-report this issue through the EveryPlate app or website:
+
+1. Go to the 'Contact Us' page.
+2. Select the reporting option if available.
+3. Choose the affected order, meal, or ingredient.
+4. Submit the report to receive the applicable resolution.
+
+If the concern cannot be self-served, please contact support.`,
+      general: `For your convenience in the future, you may be able to self-report this issue through the app or website:
+
+1. Go to the 'Contact Us' page.
+2. Select the issue reporting option if available.
+3. Choose the affected order, meal, or ingredient.
+4. Submit the report to receive the applicable resolution.
+
+If the issue is above the self-service limit, you may need to contact support.`
+    };
+  }
+
+  if (lowerWrap.includes("delivery status") || lowerWrap.includes("logistic")) {
+    return {
+      hf: `You can review the latest delivery information from your HelloFresh account or tracking link. If available, please check the current tracking status for the most recent delivery update.`,
+      everyplate: `You can review the latest delivery information from your EveryPlate account or tracking link. If available, please check the current tracking status for the most recent delivery update.`,
+      general: `You can review the latest delivery information from your account or tracking link. Please check the current tracking status for the most recent delivery update.`
+    };
+  }
+
+  if (lowerWrap.includes("voucher") || lowerWrap.includes("gift card") || lowerWrap.includes("marketing")) {
+    return {
+      hf: `You can usually manage this from the HelloFresh website:
+
+1. Log in to your account.
+2. Open the promo, gift card, or account section.
+3. Enter or review the relevant code or offer.
+4. Follow the prompts shown on screen.`,
+      everyplate: `You can usually manage this from the EveryPlate website:
+
+1. Log in to your account.
+2. Open the promo or account section.
+3. Enter or review the relevant code or offer.
+4. Follow the prompts shown on screen.`,
+      general: `You can usually manage this from the website:
+
+1. Log in to your account.
+2. Open the promo, gift card, or account section.
+3. Enter or review the relevant code or offer.
 4. Follow the prompts shown on screen.`
-    },
-    "Code Not Applied": {
-      hf: `All HelloFresh discounts can be redeemed during the checkout process.
+    };
+  }
 
-REDEEM DISCOUNT CODE
-1. Click 'Do You Have A Promo Code?' and a pop-up box will allow you to apply your code.
-2. Under the Order Summary box on the right, you will see the adjusted price.`,
-      general: `Discount codes can usually be redeemed during checkout.
-
-1. Select the option to enter a promo code.
-2. Apply your code.
-3. Check the order summary for the adjusted price.`
-    }
-  },
-
-  "Payments - Charge breakdown": {
-    "Invoice": {
-      hf: `Alternatively, you may follow the steps below:
-
-1. Log in to your HelloFresh account and click on your name in the upper right-hand corner.
-2. Head to your account settings.
-3. Head to 'Order History' and there you can view all your previous orders and how much you were charged.
-4. If you'd like us to send you an invoice simply click 'Send Invoice' next to the relevant order and we'll email it over to you.`,
-      general: `To view or request an invoice:
+  if (lowerWrap.includes("charge breakdown") || lowerWrap.includes("credit") || lowerWrap.includes("refund") || lowerWrap.includes("payment")) {
+    return {
+      hf: `You can review this in your HelloFresh account:
 
 1. Log in to your account.
-2. Go to Account Settings.
-3. Open Order History.
-4. Select the relevant order and request or download the invoice if available.`
-    },
-    "Charge Breakdown / Payment breakdown": {
-      hf: `VIEW ORDER HISTORY
-
-1. Log in to your HelloFresh account.
-2. Click on your name in the upper right-hand corner and head to your account settings.
-3. Head to 'Order History' and there you can view all your previous orders and how much you were charged.
-4. If you'd like us to send you an invoice simply click 'Send Invoice' next to the relevant order and we'll email it over to you.`,
-      general: `To check your order history and charges:
+2. Go to 'Account Settings' or 'Order History'.
+3. Open the relevant order or payment section.
+4. Review the charge, credit, or refund details shown there.`,
+      everyplate: `You can review this in your EveryPlate account:
 
 1. Log in to your account.
-2. Go to Account Settings.
-3. Open Order History.
-4. Review your previous orders and related charges.`
-    }
-  },
+2. Open your account settings or order history.
+3. Select the relevant order or payment section.
+4. Review the charge, credit, or refund details shown there.`,
+      general: `You can review this in your account:
 
-  "Payments - Credit/ Refund": {
-    "Credit": {
-      hf: `1. Log in to your HelloFresh account.
-2. Click on your name in the upper right-hand corner and head to your Account Settings.
-3. Select 'Account Info'.
-4. Scroll down to 'Your Credit' to view the credit amount on your account.
-5. This credit amount will automatically be applied towards your next scheduled delivery.
+1. Log in to your account.
+2. Go to Account Settings or Order History.
+3. Open the relevant order or payment section.
+4. Review the charge, credit, or refund details shown there.`
+    };
+  }
 
-If you have both a discount code and a credit in your account, we'll apply the discount in full before issuing the credit.`,
-      general: `1. Log in to your account.
-2. Go to Account Settings.
-3. Open Account Info or Credits.
-4. View the available credit on your account.
-5. Credit will usually apply automatically to your next eligible order.`
-    },
-    "Balance": {
-      hf: `1. Log in to your HelloFresh account.
-2. Click on your name in the upper right-hand corner and head to your Account Settings.
-3. Select 'Account Info'.
-4. Scroll down to 'Your Credit' to view the credit amount on your account.
-5. This credit amount will automatically be applied towards your next scheduled delivery.`,
-      general: `1. Log in to your account.
-2. Go to Account Settings.
-3. Open Account Info or Credit Balance.
-4. View the credit amount on your account.`
+  return {
+    hf: `You can usually manage this from your HelloFresh account by logging in, opening the relevant settings or order section, and following the steps shown on screen.`,
+    everyplate: `You can usually manage this from your EveryPlate account by logging in, opening the relevant settings or order section, and following the steps shown on screen.`,
+    general: `You can usually manage this from your account by logging in, opening the relevant settings or order section, and following the steps shown on screen.`
+  };
+}
+
+function fillMissingBrands(entry, fallback) {
+  const normalized = ensureBrandShape(entry);
+  return {
+    hf: normalized.hf || fallback.hf,
+    everyplate: normalized.everyplate || fallback.everyplate,
+    general: normalized.general || fallback.general
+  };
+}
+
+function buildUpdatedNiaLibrary(wraps, seedLibrary) {
+  const output = deepClone(seedLibrary || {});
+
+  for (const wrap of wraps) {
+    const wrapName = normalizeWrapName(wrap.name);
+    if (!output[wrapName]) output[wrapName] = {};
+
+    const baseTemplate = getBaseNiaTemplate(wrapName, output);
+
+    for (const rawKeyword of wrap.keywords || []) {
+      const keyword = normalizeKeyword(rawKeyword);
+      const existing = output[wrapName][keyword] || output[wrapName][rawKeyword] || baseTemplate;
+      const fallback = buildFallbackNia(wrapName, keyword);
+      output[wrapName][keyword] = fillMissingBrands(existing, fallback);
+
+      if (!output[wrapName][rawKeyword]) {
+        output[wrapName][rawKeyword] = output[wrapName][keyword];
+      }
     }
   }
-};
 
+  return output;
+}
+
+export const NIA_LIBRARY = buildUpdatedNiaLibrary(WRAPS, NIA_LIBRARY_SEED);

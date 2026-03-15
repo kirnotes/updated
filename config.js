@@ -1,5 +1,5 @@
 export const CONFIG = {
-  APPS_SCRIPT_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbwY3Sjf-jbpiUnfrxDZzIP11HyQdEIY7KdX_0GYHdRn0V_XFGhesCJEUnEgi1_mwx-thA/exec",
+  APPS_SCRIPT_WEBAPP_URL: "https://script.google.com/macros/s/AKfycbz1vr1RZDiAvIKthE-xx1TAcKp8cnwk2SuD1naYeI5ajjvCB47xIerWMckBqjRWINrjOw/exec",
   SHEET_URL: "https://docs.google.com/spreadsheets/d/19bSbWsXuGVABvzrFVULw2nodJb8Kh4f_q932ZQRKIp4/edit?gid=943199602#gid=943199602",
   MAX_PANELS: 3,
   STORAGE_KEYS: {

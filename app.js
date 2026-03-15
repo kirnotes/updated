@@ -294,74 +294,87 @@ async function renderCloudDashboard() {
   els.cloudUserTodayNotes.textContent = String(data.userTodayNotes || 0);
 }
 
-function cleanKeywordText(keyword) {
-  return String(keyword || "")
-    .replace(/^Cancellation\s*-\s*/i, "")
-    .replace(/^\[|\]$/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+function exportTodayHistory() {
+  const notes = getRecent();
+  const now = new Date();
+
+  const todayNotes = notes.filter((entry) => isSameDay(new Date(entry.ts), now));
+  if (!todayNotes.length) {
+    showToast("No recent notes found for this day");
+    return;
+  }
+
+  const rows = [
+    ["Dates", "KIR Notes History"],
+    ...todayNotes.map((entry) => [new Date(entry.ts).toLocaleString(), entry.note || ""])
+  ];
+
+  const csvContent = rows.map((row) => row.map(escapeCsv).join(",")).join("\r\n");
+  const fileName = `Daily_History_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}.csv`;
+  downloadFile(fileName, csvContent, "text/csv;charset=utf-8;");
+  showToast("Daily history exported");
+}
+
+function setSidebarHidden(hidden) {
+  els.sidebar.classList.toggle("is-hidden", hidden);
+  els.toggleSidebarBtn.textContent = hidden ? "Show menu" : "Hide menu";
+  saveSidebarHidden(hidden);
+}
+
+function setSidebarHidden(hidden) {
+  els.sidebar.classList.toggle("is-hidden", hidden);
+  document.querySelector(".layout")?.classList.toggle("sidebar-hidden", hidden);
+  els.toggleSidebarBtn.textContent = hidden ? "Show menu" : "Hide menu";
+  saveSidebarHidden(hidden);
+}
+}
+
+function setActiveNav() {
+  const links = document.querySelectorAll(".nav a");
+  function update() {
+    const hash = location.hash || "#builder";
+    links.forEach((link) => {
+      link.classList.toggle("active", link.getAttribute("href") === hash);
+    });
+  }
+  update();
+  window.addEventListener("hashchange", update);
 }
 
 function buildFallbackIssue(wrapCode, keyword) {
-  const kw = cleanKeywordText(keyword);
-
-  if (/cancel/i.test(wrapCode) || /cancellation/i.test(keyword)) {
-    return `Customer expected to have the account cancelled${kw && !/^No Reason Provided$/i.test(kw) ? ` since ${kw.charAt(0).toLowerCase()}${kw.slice(1)}` : ""}.`;
+  if (/cancellation/i.test(wrapCode)) {
+    return "Customer expected to have the account cancelled.";
   }
-  if (/delivery/i.test(wrapCode) || /logistics/i.test(wrapCode)) {
-    return "Customer expects to have the box delivered, but there was an issue with the delivery.";
+  if (/skip\/unskip/i.test(wrapCode)) {
+    return "Customer expected the delivery schedule to be updated.";
   }
-  if (/pick & pack/i.test(wrapCode)) {
-    return "Customer was expecting to have complete ingredients, but there was an issue with the contents of the box.";
+  if (/delivery status|logistics/i.test(wrapCode)) {
+    return "Customer expected an update regarding the delivery.";
   }
   if (/quality/i.test(wrapCode)) {
-    return "Customer expects to have a full meal to be edible, but there was an issue with the quality of the ingredients.";
+    return "Customer expected to have a full meal to be edible, but there was a quality concern.";
   }
-  if (/credit\/ refund/i.test(wrapCode) || /charge breakdown/i.test(wrapCode) || /dunning/i.test(wrapCode)) {
-    return "Customer expected support regarding the payment concern on the account.";
+  if (/pick & pack/i.test(wrapCode)) {
+    return "Customer expected the correct ingredients, but there was a missing or incorrect item.";
   }
-  if (/voucher|gift card|promotion|referral|communication/i.test(wrapCode)) {
-    return "Customer expected support regarding the promotion or communication concern on the account.";
-  }
-  if (/recipe preference|meal swap/i.test(wrapCode)) {
-    return "Customer expected support regarding meals, recipes, or preferences on the account.";
-  }
-  if (/update account|subscription details/i.test(wrapCode)) {
-    return "Customer expected to update an account or delivery setting.";
-  }
-  if (/data protection/i.test(wrapCode)) {
-    return "Customer expected support regarding a data or privacy-related request.";
-  }
-  if (/reactivation/i.test(wrapCode)) {
-    return "Customer expected to have the account reactivated.";
-  }
-  if (/connection issue/i.test(wrapCode)) {
-    return "No issue provided.";
-  }
-
-  return keyword
-    ? `Customer expected support regarding ${kw.toLowerCase()}.`
-    : `Customer expected support regarding ${wrapCode.toLowerCase()}.`;
+  return keyword ? `Customer contacted us regarding ${keyword}.` : "Customer contacted us regarding the account.";
 }
 
 function buildFallbackResolution(wrapCode, keyword) {
-  if (/cancel/i.test(wrapCode) || /cancellation/i.test(keyword)) {
-    return "I reviewed the concern and provided the appropriate cancellation outcome.";
+  if (/cancellation/i.test(wrapCode)) {
+    return "I reviewed the concern and informed cx of the cancellation outcome.";
   }
-  if (/delivery|logistics/i.test(wrapCode)) {
-    return "I reviewed the tracking and informed cx of the appropriate delivery outcome.";
+  if (/skip\/unskip/i.test(wrapCode)) {
+    return "I updated the schedule in OWL.";
   }
-  if (/pick & pack/i.test(wrapCode)) {
-    return "I process a credit and adv NIA.";
-  }
-  if (/quality/i.test(wrapCode)) {
-    return "I process a credit.";
-  }
-  if (/credit\/ refund|charge breakdown|dunning/i.test(wrapCode)) {
+  if (/credit|refund/i.test(wrapCode)) {
     return "I reviewed the account and informed cx of the payment outcome.";
   }
-  if (/voucher|gift card|promotion|referral|communication/i.test(wrapCode)) {
-    return "I informed cx of the correct promo or communication outcome.";
+  if (/pick & pack/i.test(wrapCode)) {
+    return "I processed the appropriate outcome and advised NIA if applicable.";
+  }
+  if (/quality/i.test(wrapCode)) {
+    return "I processed the appropriate quality outcome.";
   }
   if (/update account|subscription details/i.test(wrapCode)) {
     return "I updated the account in OWL or informed cx of the next steps.";
@@ -792,49 +805,6 @@ function addPanel() {
   savePanelsState();
   renderPanels();
   showToast(`Added panel ${appState.panels.length}`);
-}
-
-function exportTodayHistory() {
-  const notes = getRecent();
-  const now = new Date();
-
-  const todayNotes = notes.filter((entry) => isSameDay(new Date(entry.ts), now));
-  if (!todayNotes.length) {
-    showToast("No recent notes found for this day");
-    return;
-  }
-
-  const rows = [
-    ["Dates", "KIR Notes History"],
-    ...todayNotes.map((entry) => [new Date(entry.ts).toLocaleString(), entry.note || ""])
-  ];
-
-  const csvContent = rows.map((row) => row.map(escapeCsv).join(",")).join("\r\n");
-  const fileName = `Daily_History_${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}.csv`;
-  downloadFile(fileName, csvContent, "text/csv;charset=utf-8;");
-  showToast("Daily history exported");
-}
-
-function setSidebarHidden(hidden) {
-  els.sidebar.classList.toggle("is-hidden", hidden);
-  els.toggleSidebarBtn.textContent = hidden ? "Show menu" : "Hide menu";
-  saveSidebarHidden(hidden);
-}
-
-function loadSidebarState() {
-  setSidebarHidden(getSidebarHidden());
-}
-
-function setActiveNav() {
-  const links = document.querySelectorAll(".nav a");
-  function update() {
-    const hash = location.hash || "#builder";
-    links.forEach((link) => {
-      link.classList.toggle("active", link.getAttribute("href") === hash);
-    });
-  }
-  update();
-  window.addEventListener("hashchange", update);
 }
 
 function setSessionUI() {

@@ -317,15 +317,14 @@ function exportTodayHistory() {
 
 function setSidebarHidden(hidden) {
   els.sidebar.classList.toggle("is-hidden", hidden);
+  document.querySelector(".layout")?.classList.toggle("sidebar-hidden", hidden);
   els.toggleSidebarBtn.textContent = hidden ? "Show menu" : "Hide menu";
   saveSidebarHidden(hidden);
 }
 
-function setSidebarHidden(hidden) {
-  els.sidebar.classList.toggle("is-hidden", hidden);
-  document.querySelector(".layout")?.classList.toggle("sidebar-hidden", hidden);
-  els.toggleSidebarBtn.textContent = hidden ? "Show menu" : "Hide menu";
-  saveSidebarHidden(hidden);
+function loadSidebarState() {
+  const hidden = getSidebarHidden();
+  setSidebarHidden(Boolean(hidden));
 }
 }
 

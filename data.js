@@ -288,7 +288,7 @@ const WRAP_HINTS_RAW = {
   }
 };
 
-export const WRAP_HINTS = cleanHintMap(WRAP_HINTS_RAW);
+const WRAP_HINTS_CLEAN = cleanHintMap(WRAP_HINTS_RAW);
 
 const KEYWORD_HINTS_RAW = {
   "Marked Delivered - Not received": {
@@ -742,101 +742,168 @@ const KEYWORD_HINTS_RAW = {
   }
 };
 
-export const KEYWORD_HINTS = cleanHintMap(KEYWORD_HINTS_RAW);
-export const WRAP_DETAILS = {
+
+function buildFallbackKeywordHint(wrapName, keyword) {
+  const lowerWrap = String(wrapName).toLowerCase();
+
+  if (lowerWrap.includes("cancellation")) {
+    return {
+      Issue: `Customer expected support regarding ${keyword}.`,
+      resolution: "I reviewed the concern, followed the applicable SOP, and informed cx of the correct outcome."
+    };
+  }
+
+  if (lowerWrap.includes("skip/unskip")) {
+    return {
+      Issue: `Customer expected a delivery schedule update regarding ${keyword}.`,
+      resolution: "I reviewed the schedule and informed cx of the available outcome."
+    };
+  }
+
+  if (lowerWrap.includes("meal swap") || lowerWrap.includes("recipe")) {
+    return {
+      Issue: `Customer expected support regarding ${keyword}.`,
+      resolution: "I informed cx of the available meal, recipe, or preference options."
+    };
+  }
+
+  if (lowerWrap.includes("quality")) {
+    return {
+      Issue: `Customer reported a quality concern regarding ${keyword}.`,
+      resolution: "I reviewed the concern and informed cx of the applicable outcome."
+    };
+  }
+
+  if (lowerWrap.includes("pick & pack")) {
+    return {
+      Issue: `Customer reported a pick and pack concern regarding ${keyword}.`,
+      resolution: "I reviewed the concern and informed cx of the applicable outcome."
+    };
+  }
+
+  if (lowerWrap.includes("food safety")) {
+    return {
+      Issue: `Customer reported a food safety concern regarding ${keyword}.`,
+      resolution: "I reviewed the concern and followed food safety SOP."
+    };
+  }
+
+  if (lowerWrap.includes("delivery status") || lowerWrap.includes("logistic")) {
+    return {
+      Issue: `Customer expected support regarding ${keyword}.`,
+      resolution: "I reviewed the delivery details and informed cx of the correct outcome."
+    };
+  }
+
+  if (lowerWrap.includes("voucher") || lowerWrap.includes("marketing") || lowerWrap.includes("gift card") || lowerWrap.includes("referral")) {
+    return {
+      Issue: `Customer expected support regarding ${keyword}.`,
+      resolution: "I reviewed the promo or communication details and informed cx of the correct outcome."
+    };
+  }
+
+  if (lowerWrap.includes("payment") || lowerWrap.includes("credit") || lowerWrap.includes("refund") || lowerWrap.includes("charge")) {
+    return {
+      Issue: `Customer expected support regarding ${keyword}.`,
+      resolution: "I reviewed the payment details and informed cx of the correct outcome."
+    };
+  }
+
+  return {
+    Issue: `Customer expected support regarding ${keyword}.`,
+    resolution: "I reviewed the concern and informed cx of the correct next steps."
+  };
+}
+
+function buildCompleteKeywordHints(wraps, keywordHintsRaw) {
+  const merged = { ...keywordHintsRaw };
+
+  for (const wrap of wraps) {
+    const wrapName = normalizeWrapName(wrap.name);
+    for (const rawKeyword of wrap.keywords || []) {
+      const keyword = normalizeKeyword(rawKeyword);
+
+      if (!merged[keyword] && !merged[rawKeyword]) {
+        merged[keyword] = buildFallbackKeywordHint(wrapName, keyword);
+      }
+    }
+  }
+
+  return merged;
+}
+
+export const KEYWORD_HINTS = cleanHintMap(buildCompleteKeywordHints(WRAPS, KEYWORD_HINTS_RAW));
+
+
+const WRAP_DETAILS_RAW = {
   "Account - 1st Box Change / Question": `Issues, questions, changes, and cancellation of the 1st box. This code should be applied only if the request was made before the deadline.`,
-
   "Account - After deadline change request": `Inquiries related to after-deadline changes or box pauses. Includes after-deadline 1st box cancellation request.`,
-
   "Account - Cancellation - Duplicated Subscription": `Customer requests cancellation of subscription due to a duplicate subscription.`,
-
   "Account - Cancellation - Customer Not Retained": `The customer requested subscription cancellation, and the agent was not able to prevent the customer from canceling.
 
 Note:
 * For before-deadline box cancellation, please use "Account- Skip/Unskip"
 * For 1st box before the deadline cancellation, please use "Account - 1st box change/Question".
 * For after-deadline box cancellation, please use "Account - After deadline change request".`,
-
   "Account - Cancellation - Customer Retained": `The customer requested subscription cancellation, and the agent prevented the customer from canceling the subscription.
 
 Note:
 * For before-deadline box cancellation, please use "Account- Skip/Unskip".
 * For 1st box before the deadline cancellation, please use "Account - 1st box change/Question".
 * For after-deadline box cancellation, please use "Account - After deadline change request".`,
-
   "Account - Data Protection": `Questions or requests related to data protection, such as deleting personal data or obtaining a copy of personal information.`,
-
   "Account - Loyalty Program": `Interactions involving the HelloFresh+ Loyalty Program. Within the program, the customer unlocks milestones and rewards based on their order count. Customers need to opt in to the program, meaning they need to actively sign up to start collecting rewards.`,
-
   "Account - Meal Swap / Recipe Preference": `Inquiries about recipes and their dietary requirements, meal and add-ons swaps.`,
-
   "Account - Reactivation": `Queries related to account reactivation.`,
-
   "Account - Skip/Unskip": `Pause/unpause box requests. This code should be used for BOX cancellation (except 1st box) requested before the deadline. In this case, the customer will continue with their subscription.
 
 Note:
 * For after-deadline box cancellation, please use "Account - After deadline change request".`,
-
   "Account -Update account / subscription details": `Inquiries related to personal and subscription information changes before the deadline, i.e. delivery day, address, edit phone number, edit email address, payment method change, meal size changes, password reset. This also includes issues related to account access, i.e. customer cannot access their accounts.
 
 General inquiry about RTE/Factor meals.`,
-
   "Complaint - Food Safety": `Food safety-related complaints such as allergic reaction, foreign objects found in products, and food poisoning/foodborne illness.
 Raw or undercooked protein (only applicable to RTE and The Pets Table)
 
 Possible reasons for contact:
 * Food Safety Recalls
 * Food Safety Escalation`,
-
   "Complaint - Quality": `Complaints on the ingredients quality and packaging issues, i.e. damaged, poor quality/value perception, issue with temperature, damaged external packaging, etc.`,
-
   "Complaint - Pick & Pack": `Complaints related to pick and pack issues, i.e. incorrect, missing, or extra ingredients or meal kits.`,
-
   "Complaint - Website / App / Internal Tech Error": `Complaints on the app/website/internal technical issues, including changes made not applied, glitches, system outages, etc.`,
-
   "Logistics - Delivery status": `Inquiries related to delivery status and ETA requests within the delivery window.`,
-
   "Complaint - Logistic - Courier company": `Complaints due to property damaged by logistics company, driver behavior, delivery instructions not followed, leave safe, etc.
 
 Possible reasons for contact:
 * Damaged boxes by driver or courier
 * HFDN logistics issue (not including causes resulting in no delivery)`,
-
   "Complaint - Logistics - Early/Late": `Complaints due to delivery before or after the advised time slot/delivery window (NOT the ETA provided by the courier). Applicable when the box was delivered after 1 to 2 days of the expected delivery date.
 
 For US only: Please consider that The Pets Table and Factor Form only have 4+ days late.`,
-
   "Complaint - Logistics - Failed delivery": `Complaints due to any cause resulting in no delivery.
 
 Possible reasons for contact:
 * Request for replacement or remake
 * HFDN logistics issue resulting in no delivery`,
-
   "Marketing - Applying Voucher / Gift Card": `Inquiries concerning vouchers and codes, such as expired or codes not applied to orders, and escalations.
 
 Possible reasons for contact:
 * Loyalty Reward
 * Reactivation Code`,
-
   "Marketing - Communication": `Inquiries related to any comms about our marketing offers, collaboration requests, product endorsement proposals, unsubscribing from comms, partnership requests, advertisement, etc.
 
 Possible reasons for contact:
 * Free Meals Promotion
 * Percentage Discount`,
-
   "Marketing - Direct Sales and Reactivation team": `Issues related to any direct sales agents, door-to-door, outbound call center, and reactivation teams.
 
 Possible reasons for contact:
 * Direct sales behavior`,
-
   "Marketing - Referral": `Any referral issues including policy, referral credit, Helloshare code, etc.`,
-
   "Marketing - Voucher Fraud": `Interactions involving voucher(s)/freebie fraud.`,
-
   "Other - Connection Issue": `Connection issues experienced by CC agents, i.e. customer can't see the agents' answers, and calls are disconnected.
 
 Wrap code to be used only when the query/issue is not yet known.`,
-
   "Other - Non-customer query": `Non-customers enquiries, i.e.:
 * Courier proposal, event invites, etc
 * Requests about POCs in the company
@@ -844,11 +911,8 @@ Wrap code to be used only when the query/issue is not yet known.`,
 * Passed on details (BBB-Better Business Bureau), etc.
 
 Note: Refer to market guidelines as to what are identified as general inquiries.`,
-
   "Other - Sustainability / Sourcing": `Inquiries about resources, suppliers, alternatives, packaging, recycling, ice packs and ice pack disposal.`,
-
   "US ONLY: CISP Interaction": `Interactions with customers who are using hostile or derogatory language toward agents.`,
-
   "Payments - Charge breakdown": `Charge breakdown queries.
 
 Possible reasons for contact:
@@ -864,19 +928,18 @@ Possible reasons for contact:
 * Standard shipping
 * Unaware of surcharge
 * Unauthorised charge`,
-
   "Payments - Credit/ Refund": `Inquiries on credit/refund.
 
 Possible reasons for contact:
 * HelloFresh Cash
 * Credit balance/confirmation
 * Customer received credit originally and now would prefer a refund`,
-
   "Payments - Outstanding / Dunning": `Queries from customers that have outstanding payments or are in dunning.
 
 For US: This includes Unpaid Shipped Boxes.`
 };
-export const NIA_LIBRARY = {
+
+const NIA_LIBRARY_SEED = {
   "Account - Cancellation - Customer Not Retained": {
     "Can't Afford / Out of Budget": {
       hf: `To cancel your subscription with HelloFresh via website:
@@ -1252,6 +1315,83 @@ Here’s how:
 3. Submit your report to receive the applicable outcome.
 4. If the issue is above the self-service limit, you may be prompted to contact support.`
     },
+    "CC error": {
+      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+
+1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
+2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
+3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
+4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
+      general: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+
+1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
+2. Select which box, meal, and ingredient is damaged or missing.
+3. Submit your report to receive the applicable outcome.
+4. If the issue is above the self-service limit, you may be prompted to contact support.`
+    },
+    "CERT": {
+      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+
+1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
+2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
+3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
+4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
+      general: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+
+1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
+2. Select which box, meal, and ingredient is damaged or missing.
+3. Submit your report to receive the applicable outcome.
+4. If the issue is above the self-service limit, you may be prompted to contact support.`
+    },
+    "Customer Complaint - Disconnected Issue": {
+      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+
+1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
+2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
+3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
+4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
+      general: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+
+1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
+2. Select which box, meal, and ingredient is damaged or missing.
+3. Submit your report to receive the applicable outcome.
+4. If the issue is above the self-service limit, you may be prompted to contact support.`
+    },
+    "Failed Verification": {
+      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+
+1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
+2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
+3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
+4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
+      general: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+
+1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
+2. Select which box, meal, and ingredient is damaged or missing.
+3. Submit your report to receive the applicable outcome.
+4. If the issue is above the self-service limit, you may be prompted to contact support.`
+    },
+    "Free Add On For Life": {
+      hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
+
+1. You would navigate to the 'Contact Us' page on our app/website and click 'Report an Error'.
+2. Once you have clicked there you will be able to select which box, meal, and ingredient is damaged/missing.
+3. After that you will be able to submit your report and automatically have a credit applied to your HelloFresh account for each item in your report.
+4. You are only able to report up to 3 ingredients in this manner however, as after that you will be prompted to contact us.`,
+      everyplate: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+
+1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
+2. Select which box, meal, and ingredient is damaged or missing.
+3. Submit your report to receive the applicable outcome.
+4. If the issue is above the self-service limit, you may be prompted to contact support.`,
+      general: `For your own convenience in the future, you may be able to submit a report for missing or damaged ingredients on your end to save time.
+
+1. Navigate to the 'Contact Us' page on the app/website and click 'Report an Error' if available.
+2. Select which box, meal, and ingredient is damaged or missing.
+3. Submit your report to receive the applicable outcome.
+4. If the issue is above the self-service limit, you may be prompted to contact support.`
+    },
+
     "Incorrect": {
       hf: `For your own convenience in the future, you are also able to submit a report for missing/damaged ingredients on your end to save yourself some time.
 
@@ -1388,3 +1528,471 @@ If you have both a discount code and a credit in your account, we'll apply the d
   }
 };
 
+const KEYWORD_ALIASES = {
+  "CC error": "CC Error",
+  "Gift card": "Gift Card",
+  "Customer Complaint - DisconnectedIssue": "Customer Complaint - Disconnected Issue",
+  "Customer Complaint - DisconnectedInteraction": "Customer Complaint - Disconnected Issue",
+  "Didn't Like Meals": "Didn't Like the Meals",
+  "Cancellation - No reason provided": "No Reason Provided",
+  "Manager Call Back / CustomerResolutions": "Manager Call Back / Customer Resolutions"
+};
+
+const WRAP_ALIASES = {
+  "US ONLY: CISP Interaction": "US ONLY: CISP Issue"
+};
+
+function deepClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+function normalizeKeyword(keyword) {
+  return KEYWORD_ALIASES[keyword] || keyword;
+}
+
+function normalizeWrapName(wrapName) {
+  return WRAP_ALIASES[wrapName] || wrapName;
+}
+
+function ensureBrandShape(entry = {}) {
+  return {
+    hf: entry.hf || null,
+    everyplate: entry.everyplate || entry.EP || null,
+    general: entry.general || null
+  };
+}
+
+function getBaseNiaTemplate(wrapName, library) {
+  const wrap = library[wrapName] || {};
+  for (const existingKeyword of Object.keys(wrap)) {
+    const candidate = ensureBrandShape(wrap[existingKeyword]);
+    if (candidate.hf || candidate.everyplate || candidate.general) return candidate;
+  }
+  return { hf: null, everyplate: null, general: null };
+}
+
+function buildFallbackNia(wrapName, keyword) {
+  const lowerWrap = wrapName.toLowerCase();
+
+  if (lowerWrap.includes("cancellation")) {
+    return {
+      hf: `To cancel your subscription with HelloFresh via website:
+1. Log in on the HelloFresh website.
+2. Click on 'Account Settings'.
+3. Open your subscription or plan settings.
+4. Select the cancellation option at the bottom of the page.
+5. Follow the prompts to confirm the cancellation.`,
+      everyplate: `To cancel your EveryPlate subscription:
+1. Log in to your EveryPlate account.
+2. Open 'Plan Settings'.
+3. Select the cancellation option shown on the page.
+4. Follow the prompts to confirm.
+
+If you'd like to come back later, you can also reactivate from the same section.`,
+      general: `To cancel your subscription with XXX:
+1. Log in to your account.
+2. Go to Account Settings or Plan Settings.
+3. Open your subscription details.
+4. Select the cancellation option.
+5. Follow the prompts to confirm.`
+    };
+  }
+
+  if (lowerWrap.includes("skip/unskip")) {
+    return {
+      hf: `You can manage your upcoming delivery from your HelloFresh account:
+
+1. Log in to your account.
+2. Go to 'My Menu'.
+3. Select the delivery week you want to manage.
+4. Choose 'Skip Week' or restore the week if it was previously skipped.`,
+      everyplate: `You can manage your upcoming EveryPlate delivery directly from your account:
+
+1. Log in to your account.
+2. Open your upcoming orders or menu page.
+3. Select the week you want to manage.
+4. Choose to skip or unskip the week as needed.`,
+      general: `You can manage your upcoming delivery from your account:
+
+1. Log in to your account.
+2. Open your menu or delivery page.
+3. Select the delivery week you want to manage.
+4. Choose to skip or restore the week.`
+    };
+  }
+
+  if (lowerWrap.includes("update account") || lowerWrap.includes("subscription details")) {
+    return {
+      hf: `You can update this from your HelloFresh account:
+
+1. Log in to your account.
+2. Go to 'Account Settings' or 'Plan Settings'.
+3. Open the section related to ${keyword}.
+4. Make the necessary changes.
+5. Click 'Save' to confirm.`,
+      everyplate: `You can update this from your EveryPlate account:
+
+1. Log in to your account.
+2. Open 'Plan Settings' or account settings.
+3. Go to the section related to ${keyword}.
+4. Make the necessary changes.
+5. Save your update.`,
+      general: `You can update this from your account:
+
+1. Log in to your account.
+2. Go to Account Settings or Plan Settings.
+3. Open the section related to ${keyword}.
+4. Make the necessary changes.
+5. Save your update.`
+    };
+  }
+
+  if (lowerWrap.includes("meal swap") || lowerWrap.includes("recipe")) {
+    return {
+      hf: `You can manage this from your HelloFresh account:
+
+1. Log in to your account.
+2. Go to 'My Menu' or your plan settings.
+3. Open the section related to your meals, recipes, or preferences.
+4. Make your selection.
+5. Save the changes if prompted.`,
+      everyplate: `You can manage this from your EveryPlate account:
+
+1. Log in to your account.
+2. Open your menu or plan settings.
+3. Go to the relevant meal or preference section.
+4. Update your selection.
+5. Save your changes.`,
+      general: `You can manage this from your account:
+
+1. Log in to your account.
+2. Open your menu or plan settings.
+3. Go to the relevant meals, recipes, or preferences section.
+4. Update your selection.
+5. Save your changes.`
+    };
+  }
+
+  if (lowerWrap.includes("quality") || lowerWrap.includes("pick & pack")) {
+    return {
+      hf: `For your convenience in the future, you may be able to self-report this issue through the HelloFresh app or website:
+
+1. Go to the 'Contact Us' page.
+2. Select 'Report an Error' if available.
+3. Choose the affected box, meal, and ingredient.
+4. Submit the report to receive the applicable resolution.
+
+If the concern is above the self-service limit, please contact support.`,
+      everyplate: `For your convenience in the future, you may be able to self-report this issue through the EveryPlate app or website:
+
+1. Go to the 'Contact Us' page.
+2. Select the reporting option if available.
+3. Choose the affected order, meal, or ingredient.
+4. Submit the report to receive the applicable resolution.
+
+If the concern cannot be self-served, please contact support.`,
+      general: `For your convenience in the future, you may be able to self-report this issue through the app or website:
+
+1. Go to the 'Contact Us' page.
+2. Select the issue reporting option if available.
+3. Choose the affected order, meal, or ingredient.
+4. Submit the report to receive the applicable resolution.
+
+If the issue is above the self-service limit, you may need to contact support.`
+    };
+  }
+
+  if (lowerWrap.includes("delivery status") || lowerWrap.includes("logistic")) {
+    return {
+      hf: `You can review the latest delivery information from your HelloFresh account or tracking link. If available, please check the current tracking status for the most recent delivery update.`,
+      everyplate: `You can review the latest delivery information from your EveryPlate account or tracking link. If available, please check the current tracking status for the most recent delivery update.`,
+      general: `You can review the latest delivery information from your account or tracking link. Please check the current tracking status for the most recent delivery update.`
+    };
+  }
+
+  if (lowerWrap.includes("voucher") || lowerWrap.includes("gift card") || lowerWrap.includes("marketing")) {
+    return {
+      hf: `You can usually manage this from the HelloFresh website:
+
+1. Log in to your account.
+2. Open the promo, gift card, or account section.
+3. Enter or review the relevant code or offer.
+4. Follow the prompts shown on screen.`,
+      everyplate: `You can usually manage this from the EveryPlate website:
+
+1. Log in to your account.
+2. Open the promo or account section.
+3. Enter or review the relevant code or offer.
+4. Follow the prompts shown on screen.`,
+      general: `You can usually manage this from the website:
+
+1. Log in to your account.
+2. Open the promo, gift card, or account section.
+3. Enter or review the relevant code or offer.
+4. Follow the prompts shown on screen.`
+    };
+  }
+
+  if (lowerWrap.includes("charge breakdown") || lowerWrap.includes("credit") || lowerWrap.includes("refund") || lowerWrap.includes("payment")) {
+    return {
+      hf: `You can review this in your HelloFresh account:
+
+1. Log in to your account.
+2. Go to 'Account Settings' or 'Order History'.
+3. Open the relevant order or payment section.
+4. Review the charge, credit, or refund details shown there.`,
+      everyplate: `You can review this in your EveryPlate account:
+
+1. Log in to your account.
+2. Open your account settings or order history.
+3. Select the relevant order or payment section.
+4. Review the charge, credit, or refund details shown there.`,
+      general: `You can review this in your account:
+
+1. Log in to your account.
+2. Go to Account Settings or Order History.
+3. Open the relevant order or payment section.
+4. Review the charge, credit, or refund details shown there.`
+    };
+  }
+
+  return {
+    hf: `You can usually manage this from your HelloFresh account by logging in, opening the relevant settings or order section, and following the steps shown on screen.`,
+    everyplate: `You can usually manage this from your EveryPlate account by logging in, opening the relevant settings or order section, and following the steps shown on screen.`,
+    general: `You can usually manage this from your account by logging in, opening the relevant settings or order section, and following the steps shown on screen.`
+  };
+}
+
+function fillMissingBrands(entry, fallback) {
+  const normalized = ensureBrandShape(entry);
+  return {
+    hf: normalized.hf || fallback.hf,
+    everyplate: normalized.everyplate || fallback.everyplate,
+    general: normalized.general || fallback.general
+  };
+}
+
+function buildUpdatedNiaLibrary(wraps, seedLibrary) {
+  const output = deepClone(seedLibrary || {});
+
+  for (const wrap of wraps) {
+    const wrapName = normalizeWrapName(wrap.name);
+    if (!output[wrapName]) output[wrapName] = {};
+
+    const baseTemplate = getBaseNiaTemplate(wrapName, output);
+
+    for (const rawKeyword of wrap.keywords || []) {
+      const keyword = normalizeKeyword(rawKeyword);
+      const existing = output[wrapName][keyword] || output[wrapName][rawKeyword] || baseTemplate;
+      const fallback = buildFallbackNia(wrapName, keyword);
+      output[wrapName][keyword] = fillMissingBrands(existing, fallback);
+
+      if (rawKeyword !== keyword && output[wrapName][rawKeyword]) {
+        delete output[wrapName][rawKeyword];
+      }
+    }
+  }
+
+  return output;
+}
+
+export const NIA_LIBRARY = buildUpdatedNiaLibrary(WRAPS, NIA_LIBRARY_SEED);
+
+
+function titleCaseKeyword(keyword) {
+  return String(keyword || "issue").trim();
+}
+
+function buildFallbackKeywordHint(keyword, wrapName) {
+  const k = titleCaseKeyword(keyword);
+  const w = String(wrapName || "").toLowerCase();
+
+  if (w.includes("cancellation")) {
+    return {
+      Issue: `Customer expected support regarding ${k}.`,
+      resolution: "I reviewed the account and informed cx of the available cancellation outcome."
+    };
+  }
+
+  if (w.includes("skip/unskip")) {
+    return {
+      Issue: `Customer expected support regarding ${k}.`,
+      resolution: "I updated the delivery schedule or informed cx of the available schedule outcome."
+    };
+  }
+
+  if (w.includes("quality")) {
+    return {
+      Issue: `Customer expected to receive ingredients in good condition, but contacted us about ${k}.`,
+      resolution: "I reviewed the concern and informed cx of the applicable quality outcome."
+    };
+  }
+
+  if (w.includes("pick & pack")) {
+    return {
+      Issue: `Customer expected the order contents to be correct, but contacted us about ${k}.`,
+      resolution: "I reviewed the concern and informed cx of the applicable pick and pack outcome."
+    };
+  }
+
+  if (w.includes("delivery") || w.includes("logistic")) {
+    return {
+      Issue: `Customer expected delivery support regarding ${k}.`,
+      resolution: "I checked the delivery details and informed cx of the correct outcome."
+    };
+  }
+
+  if (w.includes("payment") || w.includes("credit") || w.includes("refund")) {
+    return {
+      Issue: `Customer expected support regarding ${k}.`,
+      resolution: "I reviewed the payment details and informed cx of the correct outcome."
+    };
+  }
+
+  if (w.includes("voucher") || w.includes("gift card") || w.includes("marketing")) {
+    return {
+      Issue: `Customer expected support regarding ${k}.`,
+      resolution: "I reviewed the promotion details and informed cx of the correct outcome."
+    };
+  }
+
+  if (w.includes("data protection")) {
+    return {
+      Issue: `Customer expected support regarding ${k}.`,
+      resolution: "I informed cx of the next steps for the data request."
+    };
+  }
+
+  return {
+    Issue: `Customer expected support regarding ${k}.`,
+    resolution: "I reviewed the concern and informed cx of the correct next steps."
+  };
+}
+
+function buildCompletedKeywordHints(wraps, existingHints) {
+  const output = { ...existingHints };
+
+  for (const wrap of wraps) {
+    const wrapName = normalizeWrapName(wrap.name);
+    for (const rawKeyword of wrap.keywords || []) {
+      const keyword = normalizeKeyword(rawKeyword);
+      if (!output[keyword]) {
+        output[keyword] = buildFallbackKeywordHint(keyword, wrapName);
+      }
+    }
+  }
+
+  return cleanHintMap(output);
+}
+
+function buildFallbackWrapHint(wrapName) {
+  const w = String(wrapName || "").toLowerCase();
+
+  if (w.includes("cancellation")) {
+    return {
+      Issue: "Customer expected support regarding subscription cancellation.",
+      resolution: "I reviewed the account and informed cx of the available cancellation outcome."
+    };
+  }
+
+  if (w.includes("skip/unskip")) {
+    return {
+      Issue: "Customer expected the delivery schedule to be updated.",
+      resolution: "I updated the delivery schedule or informed cx of the next steps."
+    };
+  }
+
+  if (w.includes("quality")) {
+    return {
+      Issue: "Customer expected to receive ingredients in good condition, but raised a quality concern.",
+      resolution: "I reviewed the concern and informed cx of the applicable quality outcome."
+    };
+  }
+
+  if (w.includes("pick & pack")) {
+    return {
+      Issue: "Customer expected the order contents to be correct, but something was missing or incorrect.",
+      resolution: "I reviewed the concern and informed cx of the applicable outcome."
+    };
+  }
+
+  if (w.includes("delivery") || w.includes("logistic")) {
+    return {
+      Issue: "Customer expected support regarding the delivery.",
+      resolution: "I reviewed the delivery details and informed cx of the correct outcome."
+    };
+  }
+
+  if (w.includes("payment")) {
+    return {
+      Issue: "Customer expected support regarding payment details on the account.",
+      resolution: "I reviewed the account and informed cx of the correct payment outcome."
+    };
+  }
+
+  return {
+    Issue: `Customer expected support regarding ${wrapName}.`,
+    resolution: "I reviewed the concern and informed cx of the correct next steps."
+  };
+}
+
+function buildCompletedWrapHints(wraps, existingHints) {
+  const output = { ...existingHints };
+
+  for (const wrap of wraps) {
+    const wrapName = normalizeWrapName(wrap.name);
+    if (!output[wrapName]) {
+      output[wrapName] = buildFallbackWrapHint(wrapName);
+    }
+  }
+
+  return cleanHintMap(output);
+}
+
+function buildFallbackWrapDetail(wrapName, wrapKeywords) {
+  const w = String(wrapName || "").toLowerCase();
+  const sample = (wrapKeywords || []).slice(0, 5).join(", ");
+
+  if (w.includes("cancellation")) {
+    return `Interactions related to cancellation support for this wrap.\n\nPossible reasons for contact:\n* ${sample || "Cancellation support"}`;
+  }
+
+  if (w.includes("skip/unskip")) {
+    return `Interactions related to updating the delivery schedule, including skip and unskip requests.\n\nPossible reasons for contact:\n* ${sample || "Schedule change"}`;
+  }
+
+  if (w.includes("quality")) {
+    return `Complaints related to ingredient quality or condition.\n\nPossible reasons for contact:\n* ${sample || "Quality concern"}`;
+  }
+
+  if (w.includes("pick & pack")) {
+    return `Complaints related to missing, incorrect, or otherwise incomplete box contents.\n\nPossible reasons for contact:\n* ${sample || "Missing or incorrect items"}`;
+  }
+
+  if (w.includes("delivery") || w.includes("logistic")) {
+    return `Interactions related to delivery updates or delivery issues.\n\nPossible reasons for contact:\n* ${sample || "Delivery issue"}`;
+  }
+
+  if (w.includes("payment")) {
+    return `Interactions related to payment, charges, refunds, or credits.\n\nPossible reasons for contact:\n* ${sample || "Payment concern"}`;
+  }
+
+  return `Interactions related to ${wrapName}.\n\nPossible reasons for contact:\n* ${sample || wrapName}`;
+}
+
+function buildCompletedWrapDetails(wraps, existingDetails) {
+  const output = { ...existingDetails };
+
+  for (const wrap of wraps) {
+    const wrapName = normalizeWrapName(wrap.name);
+    if (!output[wrapName]) {
+      output[wrapName] = buildFallbackWrapDetail(wrapName, wrap.keywords || []);
+    }
+  }
+
+  return output;
+}
+
+export const WRAP_HINTS = buildCompletedWrapHints(WRAPS, WRAP_HINTS_CLEAN);
+export const KEYWORD_HINTS = buildCompletedKeywordHints(WRAPS, KEYWORD_HINTS_CLEAN);
+export const WRAP_DETAILS = buildCompletedWrapDetails(WRAPS, WRAP_DETAILS_RAW);
